@@ -1,20 +1,29 @@
 
 
-const databaseRouter = require("../database");
+const express = require("express");
+const databaseRouter = require("../connection");
 
 //Route handler for users
 //const users = pool.query();
 
-
+//const users = databaseRouter;
 exports.getAllUsers = (req, res) => {
-    app.use('/api/v1/users', databaseRouter);
-    res.status(200).json({
-      status: 'success',
-      requestedAt: req.requestTime,
-      data: {
-        users: 
-      },
-    });
+    //console.log(users);
+    databaseRouter.query("SELECT * from users", (err, rows, fields) => {
+        if(!err) {
+            res.status(200).json({
+                status: 'success',
+                requestedAt: req.requestTime,
+                data: {
+                  users: JSON.stringify(rows)
+                },
+              });
+        }
+        else{
+            console.log(err);
+        }
+    })
+    
 };
 exports.postUser = (req, res) => {
     res.status(500).json({
@@ -23,10 +32,21 @@ exports.postUser = (req, res) => {
     });
 };
 exports.getOneUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'This route is not yet defined'
-    });
+    const id = req.params.id * 1;
+    databaseRouter.query("SELECT * from users where id=?", id, (err, rows, fields) => {
+        if(!err) {
+            res.status(200).json({
+                status: 'success',
+                requestedAt: req.requestTime,
+                data: {
+                  users: JSON.stringify(rows)
+                },
+              });
+        }
+        else{
+            console.log(err);
+        }
+    })
 };
 exports.patchUser = (req, res) => {
     res.status(500).json({
