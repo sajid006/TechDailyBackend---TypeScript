@@ -26,10 +26,25 @@ exports.getAllUsers = (req, res) => {
     
 };
 exports.postUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'This route is not yet defined'
-    });
+    const id = req.body.id;
+    //const username = req.body.id;
+    //const fullname = req.body.id;
+    //const signuptime = req.body.id;
+    //const password = req.body.id;
+    databaseRouter.query("INSERT INTO `users` (`id`, `username`, `fullname`, `signuptime`, `password`) VALUES (?)", id, (err, rows, fields) => {
+        if(!err) {
+            res.status(200).json({
+                status: 'success',
+                requestedAt: req.requestTime,
+                data: {
+                  users: JSON.stringify(rows)
+                },
+              });
+        }
+        else{
+            console.log(err);
+        }
+    })
 };
 exports.getOneUser = (req, res) => {
     const id = req.params.id * 1;
