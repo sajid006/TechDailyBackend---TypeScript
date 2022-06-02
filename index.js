@@ -41,39 +41,38 @@ app.use((req, res, next) => {
 */
 const express = require('express');
 
-const { toUSVString } = require('util');
+//const { toUSVString } = require('util');
 const morgan = require('morgan');
 const articleRouter = require('./routers/articleRouters');
 const userRouter = require('./routers/userRouters');
-const { get } = require('http');
+//const { get } = require('http');
 const app = express();
 
 //Middlewares
-app.use(morgan('dev'));
-app.use(express.json());
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
-app.use((req, res, next)=> { 
-    console.log('Hello from middleware');
-    next();
-})
+app.use(express.json());
+app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
-    req.requestTime = new Date().toISOString();
-    next();
-})
+  console.log('Hello from middleware');
+  next();
+});
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 // app.get('/', (req, res) => {
 //   res.status(200).json({ message: 'Hello from server', app: 'SportsDaily' });
 // });
 // app.post('/', (req, res) => {
 //     res.send('You can post here');
 //
-
-
-
-
 //Routes
-
-
 
 app.use('/api/v1/articles', articleRouter);
 app.use('/api/v1/users', userRouter);

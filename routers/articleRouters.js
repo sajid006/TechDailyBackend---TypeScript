@@ -1,11 +1,13 @@
 const express = require('express');
-const articleController = require('./../controllers/articleController');
+const articleController = require("../controllers/articleController");
+
 const router = express.Router();
 
+router.param('id',articleController.checkID);
 router
   .route('/')
   .get(articleController.getAllArticles)
-  .post(articleController.postArticle);
+  .post(articleController.checkBody, articleController.postArticle);
 
 router
   .route('/:id')

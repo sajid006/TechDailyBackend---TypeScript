@@ -1,7 +1,28 @@
 const fs = require('fs');
+
 const articles = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/articles-sample.json`)
 );
+exports.checkID = (req, res, next, val) => {
+  console.log(`Article id ${val}`);
+  if (req.params.id * 1 > articles.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalidd Id',
+    });
+  }
+  next();
+};
+
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.trophies) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'name/price missing',
+    });
+  }
+  next();
+};
 //Route Handlers
 exports.getAllArticles = (req, res) => {
   console.log(req.requestTime);
@@ -36,10 +57,11 @@ exports.getOneArticle = (req, res) => {
 exports.postArticle = (req, res) => {
   //console.log(req.body);
   const newId = Number(articles[articles.length - 1].id) + 1;
-  const newTour = Object.assign({ id: newId }, req.body);
+  const newTour = { id: newId, ...req.body };
+
   articles.push(newTour);
   fs.writeFile(
-    `${__dirname}/dev-data/data/articles-sample.json`,
+    `${__dirname}/../dev-data/data/articles-sample.json`,
     JSON.stringify(articles),
     (err) => {
       res.status(201).json({
@@ -54,12 +76,6 @@ exports.postArticle = (req, res) => {
 };
 
 exports.patchArticle = (req, res) => {
-  if (req.params.id * 1 > articles.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid Id',
-    });
-  }
   res.status(200).json({
     status: 'success',
     data: {
@@ -69,14 +85,11 @@ exports.patchArticle = (req, res) => {
 };
 
 exports.deleteArticle = (req, res) => {
-  if (req.params.id * 1 > articles.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalidd Id',
-    });
-  }
-  res.status(204).json({
+  console.log('Deleting?');
+  res.status(200).json({
     status: 'success',
-    data: null,
+    data: {
+      article: '<deleted>',
+    },
   });
 };

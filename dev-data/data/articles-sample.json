@@ -1,1 +1,11 @@
-[{"id":1,"name":"Barcelona","trophies":10},{"id":2,"name":"Liverpool","trophies":15},{"id":3,"name":"Atletico Madrid","trophies":"12"},{"id":4,"name":"Real Madrid","trophies":"22"},{"id":5,"name":"Chelsea","trophies":"22"},{"id":6,"name":"Chelsea","trophies":"22"}]
+[
+  { "id": 1, "name": "Barcelona", "trophies": 10 },
+  { "id": 2, "name": "Liverpool", "trophies": 15 },
+  { "id": 3, "name": "Atletico Madrid", "trophies": "12" },
+  { "id": 4, "name": "Real Madrid", "trophies": "22" },
+  { "id": 5, "name": "Chelsea", "trophies": "22" },
+  { "id": 6, "name": "Chelsea", "trophies": "22" },
+  { "id": 7, "name": "Newcastle", "trophies": "2" },
+  { "id": 8, "name": "Newcastle", "trophies": "2" },
+  { "id": 9, "name": "PSG", "trophies": "0" }
+]

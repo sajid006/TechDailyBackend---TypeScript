@@ -1,10 +1,19 @@
 
+
+const databaseRouter = require("../database");
+
 //Route handler for users
+//const users = pool.query();
+
 
 exports.getAllUsers = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'This route is not yet defined'
+    app.use('/api/v1/users', databaseRouter);
+    res.status(200).json({
+      status: 'success',
+      requestedAt: req.requestTime,
+      data: {
+        users: 
+      },
     });
 };
 exports.postUser = (req, res) => {
