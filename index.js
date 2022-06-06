@@ -40,12 +40,9 @@ app.use((req, res, next) => {
 // });
 */
 const express = require('express');
-
-//const { toUSVString } = require('util');
 const morgan = require('morgan');
 const articleRouter = require('./routers/articleRouters');
 const userRouter = require('./routers/userRouters');
-//const { get } = require('http');
 const app = express();
 
 //Middlewares
@@ -58,7 +55,7 @@ app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
-  console.log('Hello from middleware');
+  //console.log('Hello from middleware');
   next();
 });
 
@@ -66,28 +63,9 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
-// app.get('/', (req, res) => {
-//   res.status(200).json({ message: 'Hello from server', app: 'SportsDaily' });
-// });
-// app.post('/', (req, res) => {
-//     res.send('You can post here');
-//
-//Routes
 
+//Routes
 app.use('/api/v1/articles', articleRouter);
 app.use('/api/v1/users', userRouter);
-
-// app.get('/api/v1/articles', getAllArticles);
-// app.get('/api/v1/articles/:id', getOneArticle);
-// app.post('/api/v1/articles', postArticle);
-// app.patch('/api/v1/articles/:id', patchArticle);
-// app.delete('/api/v1/articles/:id', deleteArticle);
-
-//start server
-
-// const port = 3000;
-// app.listen(port, () => {
-//   console.log(`App running on port ${port}`);
-// });
 
 module.exports = app;

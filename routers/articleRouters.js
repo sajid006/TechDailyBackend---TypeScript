@@ -3,7 +3,7 @@ const articleController = require("../controllers/articleController");
 
 const router = express.Router();
 
-router.param('id',articleController.checkID);
+//router.param('id',articleController.checkID);
 router
   .route('/')
   .get(articleController.getAllArticles)
@@ -11,8 +11,8 @@ router
 
 router
   .route('/:id')
-  .get(articleController.getOneArticle)
-  .patch(articleController.patchArticle)
-  .delete(articleController.deleteArticle);
+  .get(articleController.checkID ,articleController.getOneArticle)
+  .patch(articleController.checkID, articleController.checkBody, articleController.patchArticle)
+  .delete(articleController.checkID, articleController.deleteArticle);
 
 module.exports = router;

@@ -1,95 +1,187 @@
-const fs = require('fs');
+const express = require('express');
+const Sequelize = require('sequelize');
+const sequelize = require('../connection');
 
-const articles = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/articles-sample.json`)
-);
-exports.checkID = (req, res, next, val) => {
-  console.log(`Article id ${val}`);
-  if (req.params.id * 1 > articles.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalidd Id',
+const articles = sequelize.models.articles;
+
+//Check if the there is any article with this ID
+exports.checkID = (req, res, next) => {
+  const val = req.params.id;
+  console.log(`Article id ${val} `);
+  sequelize
+    .sync()
+    .then((result) => {
+      console.log(result);
+      return articles.count();
+    })
+    .then((noOfArticles) => {
+      if (req.params.id * 1 > noOfArticles) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Invalidd Id',
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  }
+
   next();
 };
 
+//Check if request body contains the mandatory fields
 exports.checkBody = (req, res, next) => {
-  if (!req.body.name || !req.body.trophies) {
+  console.log(req.body);
+  if (!req.body.title) {
     return res.status(400).json({
       status: 'fail',
-      message: 'name/price missing',
+      message: 'title missing',
     });
   }
   next();
 };
-//Route Handlers
+
+//Read all articles
 exports.getAllArticles = (req, res) => {
-  console.log(req.requestTime);
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime,
-    data: {
-      articles: articles,
-    },
-  });
-};
-
-exports.getOneArticle = (req, res) => {
-  console.log(req.params);
-  const id = req.params.id * 1;
-  const article = articles.find((el) => el.id === id);
-  if (!article) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid Id',
-    });
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      article,
-    },
-  });
-};
-
-exports.postArticle = (req, res) => {
-  //console.log(req.body);
-  const newId = Number(articles[articles.length - 1].id) + 1;
-  const newTour = { id: newId, ...req.body };
-
-  articles.push(newTour);
-  fs.writeFile(
-    `${__dirname}/../dev-data/data/articles-sample.json`,
-    JSON.stringify(articles),
-    (err) => {
-      res.status(201).json({
+  //console.log(articles);
+  sequelize
+    .sync()
+    .then((result) => {
+      console.log(result);
+      return articles.findAll();
+    })
+    .then((allArticles) => {
+      console.log('All the articles', JSON.stringify(allArticles));
+      res.status(200).json({
         status: 'success',
+        requestedAt: req.requestTime,
         data: {
-          articles,
+          article: JSON.stringify(allArticles),
         },
       });
-    }
-  );
-  //res.send('Done');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
+//Create an article
+exports.postArticle = (req, res) => {
+  const userId = req.body.userId;
+  const title = req.body.title;
+  const description = req.body.description;
+  const rating = req.body.rating;
+  sequelize
+    .sync()
+    .then((result) => {
+      console.log(result);
+      return articles.create({
+        userId: `${userId}`,
+        title: `${title}`,
+        description: `${description}`,
+        rating: `${rating}`,
+      });
+    })
+    .then((article) => {
+      console.log('First article created:', article);
+      res.status(200).json({
+        status: 'success',
+        requestedAt: req.requestTime,
+        data: {
+          article: JSON.stringify(article),
+        },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+//Read an article
+exports.getOneArticle = (req, res) => {
+  const id = req.params.id * 1;
+  sequelize
+    .sync()
+    .then((result) => {
+      console.log(result);
+      return articles.findAll({
+        where: {
+          id: `${id}`,
+        },
+      });
+    })
+    .then((article) => {
+      console.log('Desired article', JSON.stringify(article));
+      res.status(200).json({
+        status: 'success',
+        requestedAt: req.requestTime,
+        data: {
+          article: JSON.stringify(article),
+        },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+//Update an article
 exports.patchArticle = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    data: {
-      article: '<updated trophies>',
-    },
-  });
+  const title = req.body.title;
+  const id = req.params.id;
+
+  sequelize
+    .sync()
+    .then((result) => {
+      console.log(result);
+      return articles.update(
+        { title: `${title}` },
+        {
+          where: {
+            id: `${id}`,
+          },
+        }
+      );
+    })
+    .then((article) => {
+      console.log('Article updated', article);
+      res.status(200).json({
+        status: 'success',
+        requestedAt: req.requestTime,
+        data: {
+          article: JSON.stringify(article),
+        },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
+//Delete an article
 exports.deleteArticle = (req, res) => {
-  console.log('Deleting?');
-  res.status(200).json({
-    status: 'success',
-    data: {
-      article: '<deleted>',
-    },
-  });
+  const id = req.params.id;
+  sequelize
+    .sync()
+    .then((result) => {
+      console.log(result);
+      return articles.destroy({
+        where: {
+          id: `${id}`,
+        },
+      });
+    })
+    .then((article) => {
+      console.log('Article deleted', article);
+      res.status(200).json({
+        status: 'success',
+        requestedAt: req.requestTime,
+        data: {
+          article: JSON.stringify(article),
+        },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
