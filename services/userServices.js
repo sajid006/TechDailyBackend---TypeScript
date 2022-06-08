@@ -8,24 +8,12 @@ const users = userModel.users;
 
 exports.validateID = async (value) => {
   try {
-    let noOfUsers;
-    await sequelize
-      .sync()
-      .then((result) => {
-        console.log(result);
-        return users.findAll({
-          where: {
-            id: `${value}`,
-          },
-        });
-      })
-      .then((validUsers) => {
-        noOfUsers = validUsers.length;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    console.log(noOfUsers);
+    let validUsers = await users.findAll({
+      where: {
+        id: `${value}`,
+      },
+    });
+    let noOfUsers = validUsers.length;
     return noOfUsers;
   } catch {
     console.log('Some unknown error occured');
@@ -35,20 +23,7 @@ exports.validateID = async (value) => {
 
 exports.findAllUsers = async () => {
   try {
-    let usersList;
-    await sequelize
-      .sync()
-      .then((result) => {
-        console.log(result);
-        return users.findAll();
-      })
-      .then((allUsers) => {
-        console.log(allUsers);
-        usersList = allUsers;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    let usersList = await users.findAll();
     return usersList;
   } catch {
     console.log('Some unknown error occured');
@@ -57,23 +32,11 @@ exports.findAllUsers = async () => {
 };
 exports.findOneUser = async (userID) => {
   try {
-    let user;
-    await sequelize
-      .sync()
-      .then((result) => {
-        console.log(result);
-        return users.findAll({
-          where: {
-            id: `${userID}`,
-          },
-        });
-      })
-      .then((myUser) => {
-        user = myUser;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    let user = await users.findAll({
+      where: {
+        id: `${userID}`,
+      },
+    });
     return user;
   } catch {
     console.log('Some unknown error occured');
@@ -83,26 +46,12 @@ exports.findOneUser = async (userID) => {
 
 exports.createUser = async (userData) => {
   try {
-    let newUser;
-    await sequelize
-      .sync()
-      .then((result) => {
-        console.log(result);
-        return users.create({
-          username: `${userData.username}`,
-          name: `${userData.name}`,
-          email: `${userData.email}`,
-          password: `${userData.hashedPassword}`,
-        });
-      })
-      .then((user1) => {
-        newUser = user1;
-        console.log(newUser);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    console.log(newUser);
+    let newUser = await users.create({
+      username: `${userData.username}`,
+      name: `${userData.name}`,
+      email: `${userData.email}`,
+      password: `${userData.hashedPassword}`,
+    });
     return newUser;
   } catch {
     console.log('Some unknown error occured');
@@ -112,27 +61,14 @@ exports.createUser = async (userData) => {
 
 exports.updateUser = async (id, username, name) => {
   try {
-    let myUser;
-    await sequelize
-      .sync()
-      .then((result) => {
-        console.log(result);
-        return users.update(
-          { username: `${username}`, name: `${name}` },
-          {
-            where: {
-              id: `${id}`,
-            },
-          }
-        );
-      })
-      .then((user1) => {
-        console.log(user1);
-        myUser = user1;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    let myUser = await users.update(
+      { username: `${username}`, name: `${name}` },
+      {
+        where: {
+          id: `${id}`,
+        },
+      }
+    );
     return myUser;
   } catch {
     console.log('Some unknown error occured');
@@ -142,23 +78,11 @@ exports.updateUser = async (id, username, name) => {
 
 exports.removeUser = async (id) => {
   try {
-    let deleted;
-    await sequelize
-      .sync()
-      .then((result) => {
-        console.log(result);
-        return users.destroy({
+    let deleted = users.destroy({
           where: {
             id: `${id}`,
           },
         });
-      })
-      .then((deleteStatus) => {
-        deleted = deleteStatus;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
     return deleted;
   } catch {
     console.log('Some unknown error occured');
