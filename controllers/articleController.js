@@ -1,9 +1,9 @@
 const express = require('express');
 const Sequelize = require('sequelize');
-const sequelize = require('../connection');
+const articleModel = require('../models/articleModel');
 
-const articles = sequelize.models.articles;
-
+const articles = articleModel.article;
+const sequelize = articleModel.sequelize;
 //Check if the there is any article with this ID
 exports.checkID = (req, res, next) => {
   const val = req.params.id;
@@ -12,10 +12,15 @@ exports.checkID = (req, res, next) => {
     .sync()
     .then((result) => {
       console.log(result);
-      return articles.count();
+      return articles.findAll({
+        where: {
+          id: `${val}`,
+        },
+      });
     })
-    .then((noOfArticles) => {
-      if (req.params.id * 1 > noOfArticles) {
+    .then((validArticles) => {
+      const noOfArticles = validArticles.length;
+      if (noOfArticles<1) {
         return res.status(404).json({
           status: 'fail',
           message: 'Invalidd Id',

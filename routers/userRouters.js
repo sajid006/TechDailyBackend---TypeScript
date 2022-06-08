@@ -1,5 +1,6 @@
 const express = require('express');
 const userController = require('../controllers/userController');
+const checkLogin = require('../controllers/checkLogin');
 
 const router = express.Router();
 
@@ -20,6 +21,6 @@ router
 
 router
   .route('/login')
-  .post(userController.checkBody, userController.validatetUser);
+  .post(userController.checkBody, checkLogin.validatetUser);
 
 module.exports = router;

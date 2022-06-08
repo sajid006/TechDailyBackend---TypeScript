@@ -1,5 +1,6 @@
 const express = require('express');
 const articleController = require("../controllers/articleController");
+const checkLogin = require("../controllers/checkLogin");
 
 const router = express.Router();
 
@@ -7,7 +8,7 @@ const router = express.Router();
 router
   .route('/')
   .get(articleController.getAllArticles)
-  .post(articleController.checkBody, articleController.postArticle);
+  .post(checkLogin.checkToken, articleController.checkBody, articleController.postArticle);
 
 router
   .route('/:id')

@@ -5,25 +5,19 @@ const app = require('./index');
 
 const port = 3000;
 
-// app.get('/', (req, res) => {
-//   res.send(a);
-// })
-
-
-
 app.use((err, req, res, next) => {
-  if(res.headersSend){
-    next('There was a problem');
+  console.log(err);
+  if(res.headersSend) {
+    return next(err);
   }
-  else if (err.message) {
+  else if (err) {
     console.log(err);
-    res.send(err.message);
+    res.status(404).send("Not found");
   } 
   else {
     res.status(500).send('There was an error on server side');
   }
 });
-
 
 app.listen(port, () => {
   console.log(`App running on port ${port}`);
