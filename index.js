@@ -61,14 +61,22 @@ app.use((req, res, next) => {
   console.log('Hello from middleware');
   next();
 });
-
-app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
-  next();
-});
-
 //Routes
 app.use('/api/v1/articles', articleRouter);
 app.use('/api/v1/users', userRouter);
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  if(res.headersSend) {
+    return next(err);
+  }
+  else if (err) {
+    console.log(err);
+    res.status(404).send("Not found");
+  } 
+  else {
+    res.status(500).send('There was an error on server side');
+  }
+});
 
 module.exports = app;

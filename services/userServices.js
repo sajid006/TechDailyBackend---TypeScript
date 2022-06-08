@@ -1,8 +1,4 @@
-//const userModel = require('../models/userModel');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
-
 const sequelize = userModel.sequelize;
 const users = userModel.users;
 
@@ -15,9 +11,9 @@ exports.validateID = async (value) => {
     });
     let noOfUsers = validUsers.length;
     return noOfUsers;
-  } catch {
-    console.log('Some unknown error occured');
-    return null;
+  } catch(err) {
+    console.log(err);
+    return err;
   }
 };
 
@@ -25,9 +21,9 @@ exports.findAllUsers = async () => {
   try {
     let usersList = await users.findAll();
     return usersList;
-  } catch {
-    console.log('Some unknown error occured');
-    return null;
+  } catch(err) {
+    console.log(err);
+    return err;
   }
 };
 exports.findOneUser = async (userID) => {
@@ -38,9 +34,9 @@ exports.findOneUser = async (userID) => {
       },
     });
     return user;
-  } catch {
-    console.log('Some unknown error occured');
-    return null;
+  } catch(err) {
+    console.log(err);
+    return err;
   }
 };
 
@@ -53,9 +49,9 @@ exports.createUser = async (userData) => {
       password: `${userData.hashedPassword}`,
     });
     return newUser;
-  } catch {
-    console.log('Some unknown error occured');
-    return null;
+  } catch(err) {
+    console.log(err);
+    return err;
   }
 };
 
@@ -70,22 +66,22 @@ exports.updateUser = async (id, username, name) => {
       }
     );
     return myUser;
-  } catch {
-    console.log('Some unknown error occured');
-    return null;
+  } catch(err) {
+    console.log(err);
+    return err;
   }
 };
 
 exports.removeUser = async (id) => {
   try {
     let deleted = users.destroy({
-          where: {
-            id: `${id}`,
-          },
-        });
+      where: {
+        id: `${id}`,
+      },
+    });
     return deleted;
-  } catch {
-    console.log('Some unknown error occured');
-    return null;
+  } catch(err) {
+    console.log(err);
+    return err;
   }
 };

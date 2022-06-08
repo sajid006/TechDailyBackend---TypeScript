@@ -1,13 +1,10 @@
 const services = require('../services/userServices');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
 //Read all users
 exports.getAllUsers = async (req, res) => {
-  //console.log(users);
   try {
     const allUsers = await services.findAllUsers();
-    console.log('All the users', allUsers);
     res.status(200).json({
       status: 'success',
       requestedAt: req.requestTime,
@@ -43,7 +40,6 @@ exports.getOneUser = async (req, res) => {
 
 //Create a user
 exports.postUser = async (req, res) => {
-  //console.log('lkdslsdlds');
   try {
     let userData = {
       username: null,
@@ -51,15 +47,12 @@ exports.postUser = async (req, res) => {
       email: null,
       password: null,
     };
-    //console.log('hiji');
     userData.name = req.body.name;
     userData.email = req.body.email;
     userData.hashedPassword = await bcrypt.hash(req.body.password, 10);
-    //userData.hashedPassword = "3";
     userData.username = req.body.username;
     console.log(userData);
     const newUser = await services.createUser(userData);
-    //console.log('biiji');
     console.log('First user created:', newUser);
     console.log(JSON.stringify(newUser));
     res.status(201).json({
@@ -110,9 +103,6 @@ exports.deleteUser = async(req, res) => {
     res.status(204).json({
       status: 'success',
       requestedAt: req.requestTime,
-      data: {
-        user: id,
-      },
     });
   }
   catch {

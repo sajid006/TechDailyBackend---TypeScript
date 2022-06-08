@@ -1,192 +1,108 @@
-const express = require('express');
-const Sequelize = require('sequelize');
-const articleModel = require('../models/articleModel');
-
-const articles = articleModel.article;
-const sequelize = articleModel.sequelize;
-//Check if the there is any article with this ID
-exports.checkID = (req, res, next) => {
-  const val = req.params.id;
-  console.log(`Article id ${val} `);
-  sequelize
-    .sync()
-    .then((result) => {
-      console.log(result);
-      return articles.findAll({
-        where: {
-          id: `${val}`,
-        },
-      });
-    })
-    .then((validArticles) => {
-      const noOfArticles = validArticles.length;
-      if (noOfArticles<1) {
-        return res.status(404).json({
-          status: 'fail',
-          message: 'Invalidd Id',
-        });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
-  next();
-};
-
-//Check if request body contains the mandatory fields
-exports.checkBody = (req, res, next) => {
-  console.log(req.body);
-  if (!req.body.title) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'title missing',
-    });
-  }
-  next();
-};
+const services = require('../services/articleServices');
 
 //Read all articles
-exports.getAllArticles = (req, res) => {
-  //console.log(articles);
-  sequelize
-    .sync()
-    .then((result) => {
-      console.log(result);
-      return articles.findAll();
-    })
-    .then((allArticles) => {
-      console.log('All the articles', JSON.stringify(allArticles));
-      res.status(200).json({
-        status: 'success',
-        requestedAt: req.requestTime,
-        data: {
-          article: JSON.stringify(allArticles),
-        },
-      });
-    })
-    .catch((err) => {
-      console.log(err);
+exports.getAllArticles = async(req, res) => {
+  try{
+    const allArticles = await services.findAllArticles();
+    res.status(200).json({
+      status: 'success',
+      requestedAt: req.requestTime,
+      data: {
+        articles: allArticles,
+      },
     });
-};
-
-//Create an article
-exports.postArticle = (req, res) => {
-  const userId = req.body.userId;
-  const title = req.body.title;
-  const description = req.body.description;
-  const rating = req.body.rating;
-  sequelize
-    .sync()
-    .then((result) => {
-      console.log(result);
-      return articles.create({
-        userId: `${userId}`,
-        title: `${title}`,
-        description: `${description}`,
-        rating: `${rating}`,
-      });
-    })
-    .then((article) => {
-      console.log('First article created:', article);
-      res.status(200).json({
-        status: 'success',
-        requestedAt: req.requestTime,
-        data: {
-          article: JSON.stringify(article),
-        },
-      });
-    })
-    .catch((err) => {
-      console.log(err);
+  }
+  catch {
+    res.status(404).json({
+      error: 'Article List not found',
     });
+  }
 };
 
 //Read an article
-exports.getOneArticle = (req, res) => {
-  const id = req.params.id * 1;
-  sequelize
-    .sync()
-    .then((result) => {
-      console.log(result);
-      return articles.findAll({
-        where: {
-          id: `${id}`,
-        },
-      });
-    })
-    .then((article) => {
-      console.log('Desired article', JSON.stringify(article));
-      res.status(200).json({
-        status: 'success',
-        requestedAt: req.requestTime,
-        data: {
-          article: JSON.stringify(article),
-        },
-      });
-    })
-    .catch((err) => {
-      console.log(err);
+exports.getOneArticle = async (req, res) => {
+  try {
+    const id = req.params.id * 1;
+    const myArticle = await services.findOneArticle(id);
+    res.status(200).json({
+      status: 'success',
+      requestedAt: req.requestTime,
+      data: {
+        article: JSON.stringify(myArticle),
+      },
     });
+  } catch {
+    res.status(404).json({
+      error: 'Article not found',
+    });
+  }
 };
 
-//Update an article
-exports.patchArticle = (req, res) => {
-  const title = req.body.title;
-  const id = req.params.id;
-
-  sequelize
-    .sync()
-    .then((result) => {
-      console.log(result);
-      return articles.update(
-        { title: `${title}` },
-        {
-          where: {
-            id: `${id}`,
-          },
-        }
-      );
-    })
-    .then((article) => {
-      console.log('Article updated', article);
-      res.status(200).json({
-        status: 'success',
-        requestedAt: req.requestTime,
-        data: {
-          article: JSON.stringify(article),
-        },
-      });
-    })
-    .catch((err) => {
-      console.log(err);
+//Create a article
+exports.postArticle = async (req, res) => {
+  try {
+    let articleData = {
+      userId: req.body.userId,
+      title: req.body.title,
+      description: req.body.description,
+      rating: req.body.rating,
+    };
+    
+    const newArticle = await services.createArticle(articleData);
+    console.log('First Article created:', newArticle);
+    console.log(JSON.stringify(newArticle));
+    res.status(201).json({
+      status: 'success',
+      requestedAt: req.requestTime,
+      data: {
+        Article: JSON.stringify(newArticle),
+      },
     });
+  } catch {
+    res.status(400).json({
+      error: 'Article creation failed',
+    });
+  }
 };
 
-//Delete an article
-exports.deleteArticle = (req, res) => {
-  const id = req.params.id;
-  sequelize
-    .sync()
-    .then((result) => {
-      console.log(result);
-      return articles.destroy({
-        where: {
-          id: `${id}`,
-        },
-      });
-    })
-    .then((article) => {
-      console.log('Article deleted', article);
-      res.status(200).json({
-        status: 'success',
-        requestedAt: req.requestTime,
-        data: {
-          article: JSON.stringify(article),
-        },
-      });
-    })
-    .catch((err) => {
-      console.log(err);
+
+
+//Update a article
+exports.patchArticle = async (req, res) => {
+  try {
+    const title = req.body.title;
+    const id = req.params.id;
+    const myarticle = await services.updateArticle(id, title);
+    console.log('article updated', myarticle);
+    res.status(200).json({
+      status: 'success',
+      requestedAt: req.requestTime,
+      data: {
+        article: JSON.stringify(myarticle),
+      },
     });
+  } catch {
+    res.status(401).json({
+      error: 'article update failed',
+    });
+  }
+};
+
+//Delete a article
+exports.deleteArticle = async(req, res) => {
+  try{
+    const id = req.params.id;
+    const deleteResult = await services.removeArticle(id);
+    console.log('article deleted', deleteResult);
+    res.status(204).json({
+      status: 'success',
+      requestedAt: req.requestTime,
+    });
+  }
+  catch {
+    res.status(401).json({
+      error: 'article deletion failed',
+    });
+  }
+  
 };

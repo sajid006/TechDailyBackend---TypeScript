@@ -1,5 +1,8 @@
 //Check if the there is any user with this ID
 // == move these functions to middlewares\
+
+const services = require('../services/userServices');
+
 exports.checkID = async (req, res, next) => {
     try {
       const value = req.params.id;
