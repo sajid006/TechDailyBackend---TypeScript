@@ -1,5 +1,8 @@
 const auth = require('basic-auth');
 const jwt = require('jsonwebtoken');
+const userModel = require('../models/userModel');
+const users = userModel.users;
+const bcrypt = require('bcrypt');
 
 exports.checkToken = (req, res, next) => {
   const { authorization } = req.headers;
@@ -11,7 +14,7 @@ exports.checkToken = (req, res, next) => {
     req.userId = userId;
     next();
   } catch (err) {
-    next('Authentication failed');
+    next(err);
   }
 };
 
@@ -19,36 +22,44 @@ exports.checkToken = (req, res, next) => {
 // === Refactor this method
 //Validate a user
 exports.validatetUser = async (req, res) => {
-  const username = req.body.username;
-  user1 = await user.findAll({ where: { username: `${username}` } });
-  if (user1 && user1.length > 0) {
-    const isValidPassword = await bcrypt.compare(
-      req.body.password,
-      user1[0].password
-    );
-    if (isValidPassword) {
-      const token = jwt.sign(
-        {
-          username: user1[0].username,
-          Name: user1[0].name,
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: '1h',
-        }
+  try {
+    const username = req.body.username;
+    console.log(username);
+    const user1 = await users.findAll({ where: { username: `${username}` } });
+    console.log(user1);
+    if (user1 && user1.length > 0) {
+      const isValidPassword = await bcrypt.compare(
+        req.body.password,
+        user1[0].password
       );
-      res.status(200).json({
-        access_token: token,
-        message: 'Login successful',
-      });
+      if (isValidPassword) {
+        const token = jwt.sign(
+          {
+            username: user1[0].username,
+            Name: user1[0].name,
+          },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: '1h',
+          }
+        );
+        res.status(200).json({
+          access_token: token,
+          message: 'Login successful',
+        });
+      } else {
+        res.status(401).json({
+          error: 'Authentication failed',
+        });
+      }
     } else {
       res.status(401).json({
-        error: 'Authentication failed',
+        error: 'Authentication faailed',
       });
     }
-  } else {
+  } catch (err) {
     res.status(401).json({
-      error: 'Authentication failed',
+        error: 'Authentication faailed',
     });
   }
 };

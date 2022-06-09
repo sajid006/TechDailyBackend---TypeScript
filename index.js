@@ -41,15 +41,24 @@ app.use((req, res, next) => {
 */
 const express = require('express');
 const morgan = require('morgan');
+const winston = require('./config/winston');
 const articleRouter = require('./routers/articleRouters');
 const userRouter = require('./routers/userRouters');
 const database = require('./models/dbconnect');
+const logger = require('./config/winston');
+const helmet = require('helmet');
+const AppError = require('./utils/AppError')
+const globalErrorHandler = require('./utils/errorHandler');
+
 const app = express();
+
+app.use(helmet());
+
 
 //Middlewares
 console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+  app.use(morgan('combined', {stream: winston.stream}));
 }
 // === use winston for logging
 // === use helmet for security
@@ -65,6 +74,18 @@ app.use((req, res, next) => {
 app.use('/api/v1/articles', articleRouter);
 app.use('/api/v1/users', userRouter);
 
+app.all('*', (req, res, next) => {
+  
+
+  // const err = new Error(`Cant find ${req.originalUrl} on this server`);
+  // err.status = 'fail';
+  // err.statusCode = 404;
+  next(new AppError(`Cannot find ${req.originalUrl} on this server`));
+});
+
+app.use(globalErrorHandler);
+
+/*
 app.use((err, req, res, next) => {
   console.log(err);
   if(res.headersSend) {
@@ -79,4 +100,16 @@ app.use((err, req, res, next) => {
   }
 });
 
+// error handler
+app.use(function(err, req, res, next) {
+  res.locals.message = err.message;
+  //console.log('Helllldks');
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+
+  res.status(err.status || 500);
+  res.send('error');
+});
+*/
 module.exports = app;

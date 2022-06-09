@@ -26,6 +26,7 @@ exports.findAllUsers = async () => {
     return err;
   }
 };
+
 exports.findOneUser = async (userID) => {
   try {
     let user = await users.findAll({

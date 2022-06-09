@@ -6,7 +6,7 @@ const db = databaseConnect = async() => {
         await sequelize
           .sync()
           .then((result) => {
-            console.log(result);
+            console.log('Database connected');
           })
           
       } catch(err) {

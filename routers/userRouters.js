@@ -1,6 +1,6 @@
 const express = require('express');
 const userController = require('../controllers/userController');
-const checkLogin = require('../controllers/checkLogin');
+const validation = require('../utils/validation');
 const userAuthMiddleware = require('../middlewares/userAuthMiddleware')
 
 const router = express.Router();
@@ -22,6 +22,6 @@ router
 
 router
   .route('/login')
-  .post(userAuthMiddleware.checkBody, checkLogin.validatetUser);
+  .post(validation.validatetUser);
 
 module.exports = router;

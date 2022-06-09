@@ -12,8 +12,9 @@ exports.validateID = async (value) => {
       let noOfArticles = validarticles.length;
       return noOfArticles;
     } catch(err) {
-        console.log(err);
-        return err;
+        res.status(404).json({
+            error: err,
+          });
       }
   };
 
@@ -23,8 +24,9 @@ exports.validateID = async (value) => {
       let articlesList = await articles.findAll();
       return articlesList;
     } catch(err) {
-      console.log(err);
-      return err;
+        res.status(404).json({
+            error: err,
+          });
     }
   };
 
@@ -37,8 +39,9 @@ exports.validateID = async (value) => {
       });
       return article;
     } catch(err) {
-      console.log(err);
-      return err;
+        res.status(404).json({
+            error: err,
+          });
     }
   };
 
@@ -53,7 +56,9 @@ exports.validateID = async (value) => {
       return newarticle;
     } catch(err) {
       console.log(err);
-      return err;
+      res.status(404).json({
+        error: err,
+      });
     }
   };
 
@@ -70,8 +75,9 @@ exports.validateID = async (value) => {
       );
       return myArticle;
     } catch(err) {
-      console.log(err);
-      return err;
+        res.status(404).json({
+            error: err,
+          });
     }
   };
   
@@ -84,8 +90,9 @@ exports.validateID = async (value) => {
       });
       return deleted;
     } catch(err) {
-      console.log(err);
-      return err;
+        res.status(404).json({
+            error: err,
+          });
     }
   };
   

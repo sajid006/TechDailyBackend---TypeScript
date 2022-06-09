@@ -1,9 +1,10 @@
 const services = require('../services/userServices');
 const bcrypt = require('bcrypt');
+const catchAsync = require('../utils/catchAsync');
+
 
 //Read all users
-exports.getAllUsers = async (req, res) => {
-  try {
+exports.getAllUsers = catchAsync(async (req, res, next) => {
     const allUsers = await services.findAllUsers();
     res.status(200).json({
       status: 'success',
@@ -12,16 +13,10 @@ exports.getAllUsers = async (req, res) => {
         users: allUsers,
       },
     });
-  } catch {
-    res.status(404).json({
-      error: 'User List not found',
-    });
-  }
-};
+});
 
 //Read one user
-exports.getOneUser = async (req, res) => {
-  try {
+exports.getOneUser = catchAsync( async (req, res, next) => {
     const id = req.params.id * 1;
     const myUser = await services.findOneUser(id);
     res.status(200).json({
@@ -31,16 +26,10 @@ exports.getOneUser = async (req, res) => {
         user: JSON.stringify(myUser),
       },
     });
-  } catch {
-    res.status(404).json({
-      error: 'User not found',
-    });
-  }
-};
+});
 
 //Create a user
-exports.postUser = async (req, res) => {
-  try {
+exports.postUser = catchAsync(async (req, res, next) => {
     let userData = {
       username: null,
       name: null,
@@ -62,19 +51,13 @@ exports.postUser = async (req, res) => {
         user: JSON.stringify(newUser),
       },
     });
-  } catch {
-    res.status(400).json({
-      error: 'User creation failed',
-    });
-  }
-};
+});
 
 
 
 
 //Update a user
-exports.patchUser = async (req, res) => {
-  try {
+exports.patchUser =catchAsync( async (req, res, next) => {
     const username = req.body.username;
     const name = req.body.name;
     const id = req.params.id;
@@ -87,16 +70,11 @@ exports.patchUser = async (req, res) => {
         user: JSON.stringify(myUser),
       },
     });
-  } catch {
-    res.status(401).json({
-      error: 'User update failed',
-    });
-  }
-};
+  
+});
 
 //Delete a user
-exports.deleteUser = async(req, res) => {
-  try{
+exports.deleteUser = catchAsync( async(req, res, next) => {
     const id = req.params.id;
     const deleteResult = await services.removeUser(id);
     console.log('User deleted', deleteResult);
@@ -104,11 +82,5 @@ exports.deleteUser = async(req, res) => {
       status: 'success',
       requestedAt: req.requestTime,
     });
-  }
-  catch {
-    res.status(401).json({
-      error: 'User delete failed',
-    });
-  }
   
-};
+});

@@ -1,8 +1,9 @@
 const services = require('../services/articleServices');
+const catchAsync = require('../utils/catchAsync');
 
 //Read all articles
-exports.getAllArticles = async(req, res) => {
-  try{
+exports.getAllArticles = catchAsync( async(req, res, next) => {
+
     const allArticles = await services.findAllArticles();
     res.status(200).json({
       status: 'success',
@@ -11,17 +12,11 @@ exports.getAllArticles = async(req, res) => {
         articles: allArticles,
       },
     });
-  }
-  catch {
-    res.status(404).json({
-      error: 'Article List not found',
-    });
-  }
-};
+  
+});
 
 //Read an article
-exports.getOneArticle = async (req, res) => {
-  try {
+exports.getOneArticle = catchAsync( async (req, res, next) => {
     const id = req.params.id * 1;
     const myArticle = await services.findOneArticle(id);
     res.status(200).json({
@@ -31,16 +26,11 @@ exports.getOneArticle = async (req, res) => {
         article: JSON.stringify(myArticle),
       },
     });
-  } catch {
-    res.status(404).json({
-      error: 'Article not found',
-    });
-  }
-};
+  
+});
 
 //Create a article
-exports.postArticle = async (req, res) => {
-  try {
+exports.postArticle =catchAsync ( async (req, res, next) => {
     let articleData = {
       userId: req.body.userId,
       title: req.body.title,
@@ -58,18 +48,13 @@ exports.postArticle = async (req, res) => {
         Article: JSON.stringify(newArticle),
       },
     });
-  } catch {
-    res.status(400).json({
-      error: 'Article creation failed',
-    });
-  }
-};
+  
+});
 
 
 
 //Update a article
-exports.patchArticle = async (req, res) => {
-  try {
+exports.patchArticle = catchAsync( async (req, res, next) => {
     const title = req.body.title;
     const id = req.params.id;
     const myarticle = await services.updateArticle(id, title);
@@ -81,16 +66,10 @@ exports.patchArticle = async (req, res) => {
         article: JSON.stringify(myarticle),
       },
     });
-  } catch {
-    res.status(401).json({
-      error: 'article update failed',
-    });
-  }
-};
+});
 
 //Delete a article
-exports.deleteArticle = async(req, res) => {
-  try{
+exports.deleteArticle = catchAsync( async(req, res, next) => {
     const id = req.params.id;
     const deleteResult = await services.removeArticle(id);
     console.log('article deleted', deleteResult);
@@ -98,11 +77,4 @@ exports.deleteArticle = async(req, res) => {
       status: 'success',
       requestedAt: req.requestTime,
     });
-  }
-  catch {
-    res.status(401).json({
-      error: 'article deletion failed',
-    });
-  }
-  
-};
+});
