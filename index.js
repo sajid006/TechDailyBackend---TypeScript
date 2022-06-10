@@ -75,16 +75,11 @@ app.use('/api/v1/articles', articleRouter);
 app.use('/api/v1/users', userRouter);
 
 app.all('*', (req, res, next) => {
-  
-
-  // const err = new Error(`Cant find ${req.originalUrl} on this server`);
-  // err.status = 'fail';
-  // err.statusCode = 404;
   next(new AppError(`Cannot find ${req.originalUrl} on this server`));
 });
 
 app.use(globalErrorHandler);
-
+module.exports = app;
 /*
 app.use((err, req, res, next) => {
   console.log(err);
@@ -112,4 +107,4 @@ app.use(function(err, req, res, next) {
   res.send('error');
 });
 */
-module.exports = app;
+

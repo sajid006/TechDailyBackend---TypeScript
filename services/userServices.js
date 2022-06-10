@@ -1,88 +1,59 @@
 const userModel = require('../models/userModel');
 const sequelize = userModel.sequelize;
 const users = userModel.users;
+//const catchAsync = require('../utils/catchAsync');
 
 exports.validateID = async (value) => {
-  try {
-    let validUsers = await users.findAll({
-      where: {
-        id: `${value}`,
-      },
-    });
-    let noOfUsers = validUsers.length;
-    return noOfUsers;
-  } catch(err) {
-    console.log(err);
-    return err;
-  }
+  const validUsers = await users.findAll({
+    where: {
+      id: `${value}`,
+    },
+  });
+  const noOfUsers = validUsers.length;
+  return noOfUsers;
 };
 
 exports.findAllUsers = async () => {
-  try {
-    let usersList = await users.findAll();
-    return usersList;
-  } catch(err) {
-    console.log(err);
-    return err;
-  }
+  const usersList = await users.findAll();
+  return usersList;
 };
 
 exports.findOneUser = async (userID) => {
-  try {
-    let user = await users.findAll({
-      where: {
-        id: `${userID}`,
-      },
-    });
-    return user;
-  } catch(err) {
-    console.log(err);
-    return err;
-  }
+  const user = await users.findAll({
+    where: {
+      id: `${userID}`,
+    },
+  });
+  return user;
 };
 
 exports.createUser = async (userData) => {
-  try {
-    let newUser = await users.create({
-      username: `${userData.username}`,
-      name: `${userData.name}`,
-      email: `${userData.email}`,
-      password: `${userData.hashedPassword}`,
-    });
-    return newUser;
-  } catch(err) {
-    console.log(err);
-    return err;
-  }
+  const newUser = await users.create({
+    username: `${userData.username}`,
+    name: `${userData.name}`,
+    email: `${userData.email}`,
+    password: `${userData.hashedPassword}`,
+  });
+  return newUser;
 };
 
 exports.updateUser = async (id, username, name) => {
-  try {
-    let myUser = await users.update(
-      { username: `${username}`, name: `${name}` },
-      {
-        where: {
-          id: `${id}`,
-        },
-      }
-    );
-    return myUser;
-  } catch(err) {
-    console.log(err);
-    return err;
-  }
-};
-
-exports.removeUser = async (id) => {
-  try {
-    let deleted = users.destroy({
+  const myUser = await users.update(
+    { username: `${username}`, name: `${name}` },
+    {
       where: {
         id: `${id}`,
       },
-    });
-    return deleted;
-  } catch(err) {
-    console.log(err);
-    return err;
-  }
+    }
+  );
+  return myUser;
+};
+
+exports.removeUser = async (id) => {
+  let deleted = users.destroy({
+    where: {
+      id: `${id}`,
+    },
+  });
+  return deleted;
 };

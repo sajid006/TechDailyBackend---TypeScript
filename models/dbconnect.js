@@ -1,5 +1,6 @@
 const sequelize = require('./connection');
 const Sequelize = require('sequelize');
+const AppError = require('../utils/appError');
 
 const db = databaseConnect = async() => {
     try {
@@ -11,7 +12,7 @@ const db = databaseConnect = async() => {
           
       } catch(err) {
         console.log(err);
-        return null;
+        return err;
       }
 };
 module.exports = db;
