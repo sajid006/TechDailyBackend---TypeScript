@@ -1,6 +1,6 @@
 const sequelize = require('./connection');
 const { DataTypes, Deferrable } = require('sequelize');
-const user = require('./userModel');
+const users = require('./userModel').users;
 const Sequelize = require('sequelize');
 
 //Create article table
@@ -11,11 +11,11 @@ const article = sequelize.define('articles', {
       allowNull: false,
       primaryKey: true,
     },
-    userId: {
-      type: Sequelize.INTEGER,
+    username: {
+      type: Sequelize.STRING,
       references: {
-        model: user,
-        key: 'id',
+        model: users,
+        key: 'username',
         deferrable: Deferrable.INITIALLY_IMMEDIATE,
       },
     },
@@ -28,12 +28,13 @@ const article = sequelize.define('articles', {
     },
     rating: {
       type: Sequelize.INTEGER,
-      defaultValue: 0,
+      defaultValue: 1,
       validate: {
-        min: 0,
-        max: 4,
+        min: 1,
+        max: 5,
       },
     },
   });
 
   module.exports = {sequelize, article};
+  

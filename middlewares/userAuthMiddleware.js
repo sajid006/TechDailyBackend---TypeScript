@@ -2,12 +2,12 @@
 // == move these functions to middlewares\
 
 const services = require('../services/userServices');
+const catchAsync = require('../utils/catchAsync');
 
-exports.checkID = async (req, res, next) => {
-    try {
+exports.checkUsername = async (req, res, next) => {
       const value = req.params.id;
-      console.log(`User id ${value}`);
-      const noOfUser = await services.validateID(value);
+      console.log(`Username ${value}`);
+      const noOfUser = await services.validateUser(value);
       console.log(noOfUser); // === replace all console logs with winston logging methods
       if (noOfUser < 1) {
         return res.status(404).json({
@@ -15,20 +15,16 @@ exports.checkID = async (req, res, next) => {
           message: 'Invalidd Id',
         });
       }
-    } catch {
-      res.status(401).json({
-        error: 'ID not found',
-      });
-    }
+    
     next();
   };
   
   //Check if the request contains the mandatory fields
   exports.checkBody = (req, res, next) => {
-    if (!req.body.username || !req.body.name) {
+    if (!req.body.email || !req.body.name) {
       return res.status(400).json({
         status: 'fail',
-        message: 'username/name missing',
+        message: 'name or email missing',
       });
     }
     next();

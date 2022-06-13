@@ -37,4 +37,7 @@ logger.stream = {
   },
 };
 
+console.log = function(){
+  return logger.info.apply(logger, arguments)
+}
 module.exports = logger;

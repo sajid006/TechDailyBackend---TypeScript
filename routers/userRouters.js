@@ -12,13 +12,13 @@ router
 
 router
   .route('/:id')
-  .get(userAuthMiddleware.checkID, userController.getOneUser)
+  .get(userAuthMiddleware.checkUsername, userController.getOneUser)
   .patch(
-    userAuthMiddleware.checkID,
+    userAuthMiddleware.checkUsername,
     userAuthMiddleware.checkBody,
     userController.patchUser
   )
-  .delete(userAuthMiddleware.checkID, userController.deleteUser);
+  .delete(userAuthMiddleware.checkUsername, userController.deleteUser);
 
 router
   .route('/login')

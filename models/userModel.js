@@ -4,12 +4,6 @@ const { DataTypes, Deferrable } = require('sequelize');
 
 //Create user table
 const users = sequelize.define('users', {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true,
-    },
     username: {
       type: Sequelize.STRING,
       allowNull: false,

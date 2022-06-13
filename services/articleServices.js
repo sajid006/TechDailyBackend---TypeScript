@@ -1,5 +1,4 @@
 const articleModel = require('../models/articleModel');
-const sequelize = articleModel.sequelize;
 const articles = articleModel.article;
 
 exports.validateID = async (value) => {

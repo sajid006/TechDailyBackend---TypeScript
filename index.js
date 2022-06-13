@@ -44,15 +44,16 @@ const morgan = require('morgan');
 const winston = require('./config/winston');
 const articleRouter = require('./routers/articleRouters');
 const userRouter = require('./routers/userRouters');
-const database = require('./models/dbconnect');
-const logger = require('./config/winston');
 const helmet = require('helmet');
 const AppError = require('./utils/AppError')
 const globalErrorHandler = require('./utils/errorHandler');
-
+const compression = require('compression');
+const dbConnect = require('./models/dbconnect');
 const app = express();
 
 app.use(helmet());
+
+app.use(compression());
 
 
 //Middlewares
@@ -66,6 +67,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
+dbConnect();
 app.use((req, res, next) => {
   console.log('Hello from middleware');
   next();

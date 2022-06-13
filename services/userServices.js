@@ -1,12 +1,10 @@
 const userModel = require('../models/userModel');
-const sequelize = userModel.sequelize;
 const users = userModel.users;
-//const catchAsync = require('../utils/catchAsync');
 
-exports.validateID = async (value) => {
+exports.validateUser = async (value) => {
   const validUsers = await users.findAll({
     where: {
-      id: `${value}`,
+      username: `${value}`,
     },
   });
   const noOfUsers = validUsers.length;
@@ -18,10 +16,10 @@ exports.findAllUsers = async () => {
   return usersList;
 };
 
-exports.findOneUser = async (userID) => {
+exports.findOneUser = async (username) => {
   const user = await users.findAll({
     where: {
-      id: `${userID}`,
+      username: `${username}`,
     },
   });
   return user;
@@ -37,22 +35,22 @@ exports.createUser = async (userData) => {
   return newUser;
 };
 
-exports.updateUser = async (id, username, name) => {
+exports.updateUser = async (username, name, email) => {
   const myUser = await users.update(
-    { username: `${username}`, name: `${name}` },
+    { email: `${email}`, name: `${name}` },
     {
       where: {
-        id: `${id}`,
+        username: `${username}`,
       },
     }
   );
   return myUser;
 };
 
-exports.removeUser = async (id) => {
+exports.removeUser = async (username) => {
   let deleted = users.destroy({
     where: {
-      id: `${id}`,
+      username: `${username}`,
     },
   });
   return deleted;
