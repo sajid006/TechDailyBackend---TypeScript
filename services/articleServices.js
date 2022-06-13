@@ -17,24 +17,30 @@ exports.validateID = async (value) => {
       return articlesList;
   };
 
-  exports.findOneArticle = async (articleID) => {
+  exports.findOneArticle = async (id) => {
       let article = await articles.findAll({
         where: {
-          id: `${articleID}`,
+          id
         },
       });
       return article;
   };
 
   exports.createArticle = async (articleData) => {
+    console.log(articleData.username);
       let newarticle = await articles.create({
-        userId: `${articleData.userId}`,
+        username: `${articleData.username}`,
         title: `${articleData.title}`,
         description: `${articleData.description}`,
         rating: `${articleData.rating}`,
       });
       return newarticle;
-    
+  };
+
+  exports.createArticle2 = async (articleData) => {
+    const {username, title,description,rating} = articleData;
+    const newArticle = await articles.create({username, title,description,rating});
+    return newArticle;
   };
 
 

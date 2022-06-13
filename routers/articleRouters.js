@@ -1,6 +1,6 @@
 const express = require('express');
 const articleController = require("../controllers/articleController");
-const checkLogin = require("../utils/validation");
+const validation = require("../utils/validation");
 const articleAuthMiddleware = require("../middlewares/articleAuthMiddleware");
 
 const router = express.Router();
@@ -9,12 +9,12 @@ const router = express.Router();
 router
   .route('/')
   .get(articleController.getAllArticles)
-  .post(checkLogin.checkToken, articleAuthMiddleware.checkBody, articleController.postArticle);
+  .post(validation.checkToken, articleAuthMiddleware.checkBody, articleController.postArticle);
 
 router
   .route('/:id')
   .get(articleAuthMiddleware.checkID ,articleController.getOneArticle)
-  .patch(articleAuthMiddleware.checkID, articleAuthMiddleware.checkBody, articleController.patchArticle)
-  .delete(articleAuthMiddleware.checkID, articleController.deleteArticle);
+  .patch(articleAuthMiddleware.checkID, validation.checkToken, articleAuthMiddleware.checkBody, articleController.patchArticle)
+  .delete(articleAuthMiddleware.checkID, validation.checkToken, articleController.deleteArticle);
 
 module.exports = router;

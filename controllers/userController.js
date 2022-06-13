@@ -7,16 +7,8 @@ const contentNegotiation = require('../utils/contentNegotiation');
 
 //Read all users
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  
   const allUsers = await services.findAllUsers();
-  console.log(allUsers);
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime,
-    data: {
-      user: JSON.stringify(allUsers),
-    },
-  });
+  contentNegotiation.sendResponse(req, res, allUsers);
 });
 
 //Read one user
@@ -38,10 +30,8 @@ exports.postUser = catchAsync(async (req, res, next) => {
   userData.email = req.body.email;
   userData.hashedPassword = await bcrypt.hash(req.body.password, 10);
   userData.username = req.body.username;
-  console.log(userData);
   const newUser = await services.createUser(userData);
-
-  const token = jwt.sign(
+  const accessToken = jwt.sign(
     {
       username: newUser.username,
     },
@@ -50,7 +40,9 @@ exports.postUser = catchAsync(async (req, res, next) => {
       expiresIn: '1h',
     }
   );
-  contentNegotiation.sendResponse(req, res, newUser);
+  const userWithToken = { ...newUser, accessToken};
+  console.log(userWithToken);
+  contentNegotiation.sendResponse(req, res, userWithToken, 201);
 });
 
 //Update a user
@@ -67,5 +59,5 @@ exports.patchUser = catchAsync(async (req, res, next) => {
 exports.deleteUser = catchAsync(async (req, res, next) => {
   const id = req.params.id;
   const deleteResult = await services.removeUser(id);
-  contentNegotiation.sendResponse(req, res, deleteResult);
+  res.status(204).send();
 });

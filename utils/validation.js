@@ -21,23 +21,21 @@ exports.checkToken = catchAsync( async(req, res, next) => {
     const username = decoded.username;
 
     //check if the user is deleted
-    const user0 = await users.findAll({ where: {username: `${username}`} });
+    const user0 = await users.findAll({ where: {username} });
     if(user0.length==0){
       return next(new AppError(`The user for this token no longer exists`, 401));;
     }
 
     //check if the user is the same as the one trying to post the article
-    const user1 = await users.findAll({ where: { id: `${req.body.userId}` } });
-    if(user1.length==0){
-      return next(new AppError(`invalid user id`, 400));;
+    let userParam;
+    if(req.body.username)userParam = req.body.username;
+    else userParam = req.params.id;
+    const user1 = await users.findAll({ where: { username } });
+    if(user1.length==0 || user1[0].username != username){
+      return next(new AppError(`invalid username`, 400));
     }
-    else if(user1[0].username != username){
-      return next(new AppError(`invalid user id`, 400));;
-    }
-    else{
-      req.username = username;
-      next();
-    }
+    req.username = username;
+    next();
 });
 
 // === validation should be done in models/any other utility function
@@ -45,12 +43,14 @@ exports.checkToken = catchAsync( async(req, res, next) => {
 //Validate a user
 exports.validatetUser = catchAsync( async (req, res) => {
     const username = req.body.username;
-    console.log(username);
+    const password = req.body.password;
+    if(!username || !password){
+      return next(new AppError(`Please provide username and password`, 400));
+    }
     const user1 = await users.findAll({ where: { username: `${username}` } });
-    console.log(user1);
     if (user1 && user1.length > 0) {
       const isValidPassword = await bcrypt.compare(
-        req.body.password,
+        password,
         user1[0].password
       );
       if (isValidPassword) {
@@ -68,13 +68,9 @@ exports.validatetUser = catchAsync( async (req, res) => {
           message: 'Login successful',
         });
       } else {
-        res.status(401).json({
-          error: 'Authentication failed',
-        });
+        return next(new AppError(`Authentication failed`, 401));
       }
     } else {
-      res.status(401).json({
-        error: 'Authentication faailed',
-      });
+      return next(new AppError(`Authentication failed`, 401));
     }
 });

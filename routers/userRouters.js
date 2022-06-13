@@ -1,7 +1,7 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const validation = require('../utils/validation');
-const userAuthMiddleware = require('../middlewares/userAuthMiddleware')
+const userAuthMiddleware = require('../middlewares/userAuthMiddleware');
 
 const router = express.Router();
 
@@ -14,14 +14,17 @@ router
   .route('/:id')
   .get(userAuthMiddleware.checkUsername, userController.getOneUser)
   .patch(
+    validation.checkToken,
     userAuthMiddleware.checkUsername,
     userAuthMiddleware.checkBody,
     userController.patchUser
   )
-  .delete(userAuthMiddleware.checkUsername, userController.deleteUser);
+  .delete(
+    validation.checkToken,
+    userAuthMiddleware.checkUsername,
+    userController.deleteUser
+  );
 
-router
-  .route('/login')
-  .post(validation.validatetUser);
+router.route('/login').post(validation.validatetUser);
 
 module.exports = router;
