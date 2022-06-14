@@ -1,12 +1,18 @@
 {
-  "extends": ["eslint:recommended", "plugin:import/errors", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "prettier"
+  ],
   "rules": {
     "no-console": 1,
     "prefer-const": 2,
     "no-var": 2,
     "no-unused-vars": [
       "error",
-      { "argsIgnorePattern": "req|res|next|val|options|err" }
+      {
+        "argsIgnorePattern": "req|res|next|val|options|err"
+      }
     ],
     "prettier/prettier": [
       "error",

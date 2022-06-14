@@ -3,7 +3,6 @@ const { Deferrable } = require('sequelize');
 const users = require('./userModel').users;
 const Sequelize = require('sequelize');
 
-// Create article table
 const articles = sequelize.define('articles', {
     id: {
         type: Sequelize.INTEGER,

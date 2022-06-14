@@ -20,40 +20,51 @@ const generateToken = (username) => {
     );
 };
 
-const checkTokenForArticle = catchAsync(async (req, res, next) => {
-    // check if authorization token is available
-    const { authorization } = req.headers;
-    let token;
-    if (authorization && authorization.startsWith('Bearer')) {
-        token = authorization.split(' ')[1];
-    } else {
-        return next(new AppError('Your are not logged in', 401));
-    }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const username = decoded.username;
+const checkToken = (routeName) => {
+    return catchAsync(async (req, res, next) => {
+        // check if authorization token is available
+        const { authorization } = req.headers;
+        let token;
+        if (authorization && authorization.startsWith('Bearer')) {
+            token = authorization.split(' ')[1];
+        } else {
+            return next(new AppError('Your are not logged in', 401));
+        }
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const usernameFromToken = decoded.username;
 
-    // check if the user is deleted
-    const userFromToken = await users.findOne({ where: { username } });
-    if (!userFromToken) {
-        return next(new AppError('The user for this token no longer exists', 401));
-    }
+        // check if the user is deleted
+        const userFromToken = await users.findOne({
+            where: { username: usernameFromToken },
+        });
+        if (!userFromToken) {
+            return next(new AppError('The user for this token no longer exists', 401));
+        }
 
-    // check if the user is the same as the one trying to post the article or update the user
-    let userParam;
-    if (req.body.username) userParam = req.body.username;
-    else if (req.params.id) {
-        console.log(req.params.id);
-        const article = await articles.findOne({ where: { id: req.params.id } });
-        userParam = article.username;
-        console.log(userParam);
-    } else return next(new AppError('Please provide a username', 401));
-    const userFromRequest = await users.findOne({ where: { username: userParam } });
-    if (!userFromRequest || userFromRequest.username !== username) {
-        return next(new AppError('invalid username', 401));
-    }
-    req.username = username;
-    next();
-});
+        // check if the user is the same as the one trying to update/delete the user
+        if (routeName == 'user') {
+            if (!req.params.id) {
+                return next(new AppError('Please provide a username', 401));
+            } else if (req.params.id !== usernameFromToken) {
+                return next(new AppError('You are not authorized', 401));
+            }
+        } else {
+            let usernameFromReq;
+            if (req.body.username) usernameFromReq = req.body.username;
+            else if (req.params.id) {
+                const article = await articles.findOne({
+                    where: { id: req.params.id },
+                });
+                usernameFromReq = article.username;
+            } else return next(new AppError('Please provide a username', 401));
+            if (usernameFromReq !== usernameFromToken) {
+                return next(new AppError('You are not authorized', 401));
+            }
+        }
+        req.username = usernameFromToken;
+        next();
+    });
+};
 
 const validatetUser = catchAsync(async (req, res, next) => {
     const username = req.body.username;
@@ -61,7 +72,9 @@ const validatetUser = catchAsync(async (req, res, next) => {
     if (!username || !password) {
         return next(new AppError('Please provide username and password', 400));
     }
-    const user = await users.findOne({ where: { username: `${username}` } });
+    const user = await users.findOne({
+        where: { username: `${username}` },
+    });
     if (user) {
         const isValidPassword = await bcrypt.compare(password, user.password);
         if (isValidPassword) {
@@ -78,4 +91,8 @@ const validatetUser = catchAsync(async (req, res, next) => {
     }
 });
 
-module.exports = { generateToken, checkTokenForArticle, validatetUser };
+module.exports = {
+    generateToken,
+    checkToken,
+    validatetUser,
+};

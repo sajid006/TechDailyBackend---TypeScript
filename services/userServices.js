@@ -19,9 +19,10 @@ exports.findAllUsers = async () => {
 exports.findOneUser = async (username) => {
     const user = await users.findOne({
         where: {
-            username,
+            username: username,
         },
     });
+
     return user;
 };
 

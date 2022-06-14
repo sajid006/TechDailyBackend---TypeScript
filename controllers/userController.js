@@ -16,18 +16,12 @@ exports.getUser = catchAsync(async (req, res, next) => {
 });
 
 exports.postUser = catchAsync(async (req, res, next) => {
-    const userData = {
-        username: null,
-        name: null,
-        email: null,
-        password: null,
-    };
+    const userData = {};
     userData.name = req.body.name;
     userData.email = req.body.email;
-    userData.hashedPassword = await bcrypt.hash(req.body.password, 10);
+    userData.password = await bcrypt.hash(req.body.password, 10);
     userData.username = req.body.username;
     const newUser = await services.createUser(userData);
-    // move to a utility function
     const accessToken = generateToken(newUser.username);
     const userWithToken = { ...newUser.dataValues, accessToken };
     contentNegotiation.sendResponse(req, res, userWithToken, 201);

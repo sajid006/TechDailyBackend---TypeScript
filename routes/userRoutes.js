@@ -14,13 +14,13 @@ router
     .route('/:id')
     .get(userAuthMiddleware.checkUsername, userController.getUser)
     .patch(
-        validation.checkTokenForArticle,
+        validation.checkToken('user'),
         userAuthMiddleware.checkUsername,
         userAuthMiddleware.checkBody,
         userController.patchUser
     )
     .delete(
-        validation.checkTokenForArticle,
+        validation.checkToken('user'),
         userAuthMiddleware.checkUsername,
         userController.deleteUser
     );

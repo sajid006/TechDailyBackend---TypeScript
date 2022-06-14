@@ -14,7 +14,6 @@ exports.checkUsername = catchAsync(async (req, res, next) => {
     next();
 });
 
-// Check if the request contains the mandatory fields
 exports.checkBody = (req, res, next) => {
     if (!req.body.email || !req.body.name) {
         return res.status(400).json({

@@ -9,7 +9,7 @@ router
     .route('/')
     .get(articleController.getAllArticles)
     .post(
-        validation.checkTokenForArticle,
+        validation.checkToken('article'),
         articleAuthMiddleware.checkBody,
         articleController.postArticle
     );
@@ -19,13 +19,13 @@ router
     .get(articleAuthMiddleware.checkID, articleController.getArticle)
     .patch(
         articleAuthMiddleware.checkID,
-        validation.checkTokenForArticle,
+        validation.checkToken('article'),
         articleAuthMiddleware.checkBody,
         articleController.patchArticle
     )
     .delete(
         articleAuthMiddleware.checkID,
-        validation.checkTokenForArticle,
+        validation.checkToken('article'),
         articleController.deleteArticle
     );
 
