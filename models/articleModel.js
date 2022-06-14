@@ -1,40 +1,39 @@
 const sequelize = require('./connection');
-const { DataTypes, Deferrable } = require('sequelize');
+const { Deferrable } = require('sequelize');
 const users = require('./userModel').users;
 const Sequelize = require('sequelize');
 
-//Create article table
-const article = sequelize.define('articles', {
+// Create article table
+const articles = sequelize.define('articles', {
     id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true,
     },
     username: {
-      type: Sequelize.STRING,
-      references: {
-        model: users,
-        key: 'username',
-        deferrable: Deferrable.INITIALLY_IMMEDIATE,
-      },
+        type: Sequelize.STRING,
+        references: {
+            model: users,
+            key: 'username',
+            deferrable: Deferrable.INITIALLY_IMMEDIATE,
+        },
     },
     title: {
-      type: Sequelize.STRING,
-      allowNull: false,
+        type: Sequelize.STRING,
+        allowNull: false,
     },
     description: {
-      type: Sequelize.STRING,
+        type: Sequelize.STRING,
     },
     rating: {
-      type: Sequelize.INTEGER,
-      defaultValue: 1,
-      validate: {
-        min: 1,
-        max: 5,
-      },
+        type: Sequelize.INTEGER,
+        defaultValue: 1,
+        validate: {
+            min: 1,
+            max: 5,
+        },
     },
-  });
+});
 
-  module.exports = {sequelize, article};
-  
+module.exports = { sequelize, articles };

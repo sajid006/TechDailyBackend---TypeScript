@@ -1,28 +1,27 @@
 const sequelize = require('./connection');
 const Sequelize = require('sequelize');
-const { DataTypes, Deferrable } = require('sequelize');
+const { DataTypes } = require('sequelize');
 
-//Create user table
+// Create user table
 const users = sequelize.define('users', {
     username: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      primaryKey: true,
+        type: Sequelize.STRING,
+        allowNull: false,
+        primaryKey: true,
     },
     name: {
-      type: Sequelize.STRING,
+        type: Sequelize.STRING,
     },
     email: {
-      type: Sequelize.STRING,
+        type: Sequelize.STRING,
     },
     signUpTime: {
-      type: DataTypes.TIME,
-      defaultValue: DataTypes.NOW,
+        type: DataTypes.TIME,
+        defaultValue: DataTypes.NOW,
     },
     password: {
-      type: Sequelize.STRING,
+        type: Sequelize.STRING,
     },
-  });
+});
 
-  module.exports= {users, sequelize};
-
+module.exports = { users, sequelize };

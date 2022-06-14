@@ -1,0 +1,37 @@
+{
+  "extends": ["eslint:recommended", "plugin:import/errors", "prettier"],
+  "rules": {
+    "no-console": 1,
+    "prefer-const": 2,
+    "no-var": 2,
+    "no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "req|res|next|val|options|err" }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "printWidth": 100,
+        "tabWidth": 4,
+        "semi": true,
+        "endOfLine": "auto"
+      }
+    ]
+  },
+  "plugins": ["import", "prettier"],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 2019,
+    "sourceType": "module",
+    "requireConfigFile": false
+  },
+  "env": {
+    "commonjs": true,
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  }
+}

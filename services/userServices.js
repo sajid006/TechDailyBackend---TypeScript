@@ -2,56 +2,52 @@ const userModel = require('../models/userModel');
 const users = userModel.users;
 
 exports.validateUser = async (value) => {
-  const validUsers = await users.findAll({
-    where: {
-      username: `${value}`,
-    },
-  });
-  const noOfUsers = validUsers.length;
-  return noOfUsers;
+    const validUsers = await users.findOne({
+        where: {
+            username: `${value}`,
+        },
+    });
+    if (validUsers) return 1;
+    else return 0;
 };
 
 exports.findAllUsers = async () => {
-  const usersList = await users.findAll();
-  return usersList;
+    const usersList = await users.findAll();
+    return usersList;
 };
 
 exports.findOneUser = async (username) => {
-  const user = await users.findAll({
-    where: {
-      username: `${username}`,
-    },
-  });
-  return user;
+    const user = await users.findOne({
+        where: {
+            username,
+        },
+    });
+    return user;
 };
 
 exports.createUser = async (userData) => {
-  const newUser = await users.create({
-    username: `${userData.username}`,
-    name: `${userData.name}`,
-    email: `${userData.email}`,
-    password: `${userData.hashedPassword}`,
-  });
-  return newUser;
+    const { username, name, email, password } = userData;
+    const newUser = await users.create({ username, name, email, password });
+    return newUser;
 };
 
 exports.updateUser = async (username, name, email) => {
-  const myUser = await users.update(
-    { email: `${email}`, name: `${name}` },
-    {
-      where: {
-        username: `${username}`,
-      },
-    }
-  );
-  return myUser;
+    const myUser = await users.update(
+        { email, name },
+        {
+            where: {
+                username,
+            },
+        }
+    );
+    return myUser;
 };
 
 exports.removeUser = async (username) => {
-  let deleted = users.destroy({
-    where: {
-      username: `${username}`,
-    },
-  });
-  return deleted;
+    const deleted = users.destroy({
+        where: {
+            username,
+        },
+    });
+    return deleted;
 };

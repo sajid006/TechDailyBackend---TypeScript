@@ -1,16 +1,13 @@
 const sequelize = require('./connection');
 
-const db = async() => {
+const db = async () => {
     try {
-        await sequelize
-          .sync()
-          .then((result) => {
+        await sequelize.sync().then((result) => {
             console.log('Database connected');
-          });
-          
-      } catch(err) {
+        });
+    } catch (err) {
         console.log(err);
         return err;
-      }
+    }
 };
 module.exports = db;
