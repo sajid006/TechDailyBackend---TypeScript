@@ -1,10 +1,10 @@
 const userModel = require('../models/userModel');
 const users = userModel.users;
 
-exports.validateUser = async (value) => {
+exports.validateUser = async (username) => {
     const validUsers = await users.findOne({
         where: {
-            username: `${value}`,
+            username,
         },
     });
     if (validUsers) return 1;

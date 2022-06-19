@@ -27,7 +27,6 @@ const articles = sequelize.define('articles', {
     },
     rating: {
         type: Sequelize.INTEGER,
-        defaultValue: 1,
         validate: {
             min: 1,
             max: 5,

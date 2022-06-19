@@ -8,25 +8,17 @@ const router = express.Router();
 router
     .route('/')
     .get(articleController.getAllArticles)
-    .post(
-        validation.checkToken('article'),
-        articleAuthMiddleware.checkBody,
-        articleController.postArticle
-    );
+    .post(validation.checkTokenArticle, articleAuthMiddleware.checkBody, articleController.postArticle);
 
 router
     .route('/:id')
     .get(articleAuthMiddleware.checkID, articleController.getArticle)
     .patch(
         articleAuthMiddleware.checkID,
-        validation.checkToken('article'),
+        validation.checkTokenArticle,
         articleAuthMiddleware.checkBody,
         articleController.patchArticle
     )
-    .delete(
-        articleAuthMiddleware.checkID,
-        validation.checkToken('article'),
-        articleController.deleteArticle
-    );
+    .delete(articleAuthMiddleware.checkID, validation.checkTokenArticle, articleController.deleteArticle);
 
 module.exports = router;

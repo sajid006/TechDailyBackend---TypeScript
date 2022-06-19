@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:import/errors",
-    "prettier"
-  ],
+  "extends": ["eslint:recommended", "plugin:import/errors", "prettier"],
   "rules": {
     "no-console": 1,
     "prefer-const": 2,
@@ -19,7 +15,7 @@
       {
         "trailingComma": "es5",
         "singleQuote": true,
-        "printWidth": 100,
+        "printWidth": 120,
         "tabWidth": 4,
         "semi": true,
         "endOfLine": "auto"

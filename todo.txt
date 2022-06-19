@@ -1,0 +1,1 @@
+create a route to get all stories of a user 

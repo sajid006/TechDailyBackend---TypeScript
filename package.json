@@ -189,11 +189,16 @@
   "scripts": {
     "start": "nodemon server.js",
     "startproduction": "SET NODE_ENV=production & nodemon server.js",
-    "debug": "ndb server.js"
+    "debug": "ndb server.js",
+    "test": "jest",
+    "testwatch": "jest --watchAll"
   },
   "author": "Sajid",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
+    "babel-jest": "^28.1.1",
     "eslint": "^8.17.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.5.0",
@@ -205,6 +210,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.30.0",
+    "jest": "^28.1.1",
+    "mock-req-res": "^1.2.0",
     "ndb": "^1.1.5",
     "prettier": "^2.6.2"
   }
