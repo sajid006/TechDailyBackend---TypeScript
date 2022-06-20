@@ -6,10 +6,16 @@ const users = sequelize.define('users', {
         type: Sequelize.STRING,
         allowNull: false,
         primaryKey: { args: true, msg: 'Username must be given' },
+        validate: {
+            is: { args: /^(?=.{4,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/, msg: 'Username not acceptable' },
+        },
     },
     name: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: { args: false, msg: 'Name is required.' },
+        validate: {
+            is: { args: /[a-zA-Z][a-zA-Z ]*/, msg: 'Name not acceptable' },
+        },
     },
     email: {
         type: Sequelize.STRING,

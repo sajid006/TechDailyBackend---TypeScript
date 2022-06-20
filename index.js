@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const AppError = require('./utils/AppError');
 const globalErrorHandler = require('./utils/errorHandler');
 const compression = require('compression');
-const dbConnect = require('./models/dbconnect');
+const dbConnect = require('./config/dbconnect');
 
 const app = express();
 

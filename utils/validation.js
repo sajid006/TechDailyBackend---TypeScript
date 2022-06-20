@@ -24,7 +24,6 @@ const decodeToken = (req, res) => {
     // check if authorization token is available
     const { authorization } = req.headers;
     let token;
-    console.log('lkddjlkf');
     if (authorization && authorization.startsWith('Bearer')) {
         token = authorization.split(' ')[1];
     } else {
@@ -66,11 +65,15 @@ const checkTokenArticle = catchAsync(async (req, res, next) => {
 
     // check if the user is the same as the one trying to update/delete the user
 
-    if (!req.params.id) return next(new AppError('Please provide a username', 401));
-    const article = await articles.findOne({
-        where: { id: req.params.id },
-    });
-    const usernameFromReq = article.username;
+    let usernameFromReq;
+    if (!req.body.username && !req.params.id) return next(new AppError('Please provide a username', 401));
+    if (req.body.username) usernameFromReq = req.body.username;
+    else if (req.params.id) {
+        const article = await articles.findOne({
+            where: { id: req.params.id },
+        });
+        usernameFromReq = article.username;
+    }
     if (usernameFromReq !== usernameFromToken) {
         return next(new AppError('You are not authorized', 401));
     }

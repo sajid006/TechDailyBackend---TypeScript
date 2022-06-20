@@ -23,6 +23,7 @@ const htmlData = (inputData) => {
 };
 
 const sendResponse = (req, res, inputData, statuscode) => {
+    console.log('sajid');
     if (!statuscode) statuscode = 200;
     return res.format({
         'application/json': function () {

@@ -1,8 +1,8 @@
-const sequelize = require('./connection');
+const sequelize = require('../models/connection');
 
 const db = async () => {
     try {
-        await sequelize.sync().then((result) => {
+        await sequelize.sync({ force: false }).then((result) => {
             console.log('Database connected');
         });
     } catch (err) {

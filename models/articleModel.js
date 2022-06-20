@@ -20,7 +20,7 @@ const articles = sequelize.define('articles', {
     },
     title: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: { args: false, msg: 'Title is required.' },
     },
     description: {
         type: Sequelize.STRING,

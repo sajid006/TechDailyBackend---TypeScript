@@ -4,7 +4,7 @@ const articles = articleModel.articles;
 exports.validateID = async (value) => {
     const validarticle = await articles.findOne({
         where: {
-            id: `${value}`,
+            id: value,
         },
     });
     if (validarticle) return 1;
@@ -31,14 +31,14 @@ exports.createArticle = async (articleData) => {
     return newArticle;
 };
 
-exports.updateArticle = async (id, articlename) => {
+exports.updateArticle = async (id, title) => {
     const myArticle = await articles.update(
         {
-            title: `${articlename}`,
+            title,
         },
         {
             where: {
-                id: `${id}`,
+                id,
             },
         }
     );
@@ -48,7 +48,7 @@ exports.updateArticle = async (id, articlename) => {
 exports.removeArticle = async (id) => {
     const deleted = articles.destroy({
         where: {
-            id: `${id}`,
+            id,
         },
     });
     return deleted;
