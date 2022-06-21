@@ -2,7 +2,6 @@ const sequelize = require('./connection');
 const { Deferrable } = require('sequelize');
 const users = require('./userModel').users;
 const Sequelize = require('sequelize');
-
 const articles = sequelize.define('articles', {
     id: {
         type: Sequelize.INTEGER,
@@ -34,4 +33,4 @@ const articles = sequelize.define('articles', {
     },
 });
 
-module.exports = { sequelize, articles };
+module.exports = { articles };

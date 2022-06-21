@@ -15,7 +15,6 @@
     "json-to-html": "^0.1.2",
     "json-to-plain-text": "^1.0.3",
     "jsonwebtoken": "^8.5.1",
-    "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
     "sequelize": "^6.20.1",
     "winston": "^3.7.2",
@@ -37,8 +36,8 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.1",
-    "mock-req-res": "^1.2.0",
     "ndb": "^1.1.5",
+    "node-mocks-http": "^1.11.0",
     "prettier": "^2.7.1"
   }
 }

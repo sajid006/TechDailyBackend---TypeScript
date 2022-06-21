@@ -34,5 +34,5 @@ exports.patchArticle = catchAsync(async (req, res, next) => {
 exports.deleteArticle = catchAsync(async (req, res, next) => {
     const id = req.params.id;
     await services.removeArticle(id);
-    res.status(204).send();
+    res.status(204).json({});
 });

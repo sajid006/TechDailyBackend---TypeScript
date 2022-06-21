@@ -2,7 +2,7 @@ const services = require('../services/userServices');
 const bcrypt = require('bcrypt');
 const catchAsync = require('../utils/catchAsync');
 const contentNegotiation = require('../utils/contentNegotiation');
-const { generateToken } = require('../utils/validation');
+const validation = require('../utils/validation');
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
     const allUsers = await services.findAllUsers();
@@ -22,7 +22,7 @@ exports.postUser = catchAsync(async (req, res, next) => {
     userData.password = await bcrypt.hash(req.body.password, 10);
     userData.username = req.body.username;
     const newUser = await services.createUser(userData);
-    const accessToken = generateToken(newUser.username);
+    const accessToken = validation.generateToken(newUser.username);
     const userWithToken = { ...newUser.dataValues, accessToken };
     contentNegotiation.sendResponse(req, res, userWithToken, 201);
 });
@@ -38,5 +38,5 @@ exports.patchUser = catchAsync(async (req, res, next) => {
 exports.deleteUser = catchAsync(async (req, res, next) => {
     const id = req.params.id;
     await services.removeUser(id);
-    res.status(204).send();
+    res.status(204).json({});
 });

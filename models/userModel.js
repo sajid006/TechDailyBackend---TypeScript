@@ -7,7 +7,7 @@ const users = sequelize.define('users', {
         allowNull: false,
         primaryKey: { args: true, msg: 'Username must be given' },
         validate: {
-            is: { args: /^(?=.{4,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/, msg: 'Username not acceptable' },
+            is: { args: /^[A-Za-z][A-Za-z0-9_]{4,30}$/, msg: 'Username not acceptable' },
         },
     },
     name: {
@@ -29,4 +29,4 @@ const users = sequelize.define('users', {
     },
 });
 
-module.exports = { users, sequelize };
+module.exports = { users };
