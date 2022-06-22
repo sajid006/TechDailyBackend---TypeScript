@@ -6,19 +6,19 @@ const articleAuthMiddleware = require('../middlewares/articleAuthMiddleware');
 const router = express.Router();
 
 router
-    .route('/')
-    .get(articleController.getAllArticles)
-    .post(validation.checkTokenArticle, articleAuthMiddleware.checkBody, articleController.postArticle);
+  .route('/')
+  .get(articleController.getAllArticles)
+  .post(validation.checkTokenArticle, articleAuthMiddleware.checkBody, articleController.postArticle);
 
 router
-    .route('/:id')
-    .get(articleAuthMiddleware.checkID, articleController.getArticle)
-    .patch(
-        articleAuthMiddleware.checkID,
-        validation.checkTokenArticle,
-        articleAuthMiddleware.checkBody,
-        articleController.patchArticle
-    )
-    .delete(articleAuthMiddleware.checkID, validation.checkTokenArticle, articleController.deleteArticle);
+  .route('/:id')
+  .get(articleAuthMiddleware.checkID, articleController.getArticle)
+  .patch(
+    articleAuthMiddleware.checkID,
+    validation.checkTokenArticle,
+    articleAuthMiddleware.checkBody,
+    articleController.patchArticle
+  )
+  .delete(articleAuthMiddleware.checkID, validation.checkTokenArticle, articleController.deleteArticle);
 
 module.exports = router;
