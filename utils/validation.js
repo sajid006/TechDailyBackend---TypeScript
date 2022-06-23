@@ -24,17 +24,25 @@ const decodeToken = (req, res) => {
   // check if authorization token is available
   const { authorization } = req.headers;
   let token;
+  console.log(authorization);
   if (authorization && authorization.startsWith('Bearer')) {
+    console.log('nooooo');
     token = authorization.split(' ')[1];
   } else {
-    res.status(401).send('You are not logged in');
+    console.log('yes');
+    return undefined;
   }
+  console.log(token);
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  console.log('come');
   return decoded.username;
 };
 const checkTokenUser = catchAsync(async (req, res, next) => {
   const usernameFromToken = decodeToken(req, res);
-
+  console.log('gfhg', usernameFromToken);
+  if (!usernameFromToken) {
+    return next(new AppError('Your token does not contain any user', 401));
+  }
   // check if the user is available
   const userFromToken = await users.findOne({
     where: { username: usernameFromToken },
@@ -54,7 +62,9 @@ const checkTokenUser = catchAsync(async (req, res, next) => {
 
 const checkTokenArticle = catchAsync(async (req, res, next) => {
   const usernameFromToken = decodeToken(req, res);
-
+  if (!usernameFromToken) {
+    return next(new AppError('Your token does not contain any user', 401));
+  }
   // check if the user is available
   const userFromToken = await users.findOne({
     where: { username: usernameFromToken },
@@ -93,7 +103,7 @@ const validatetUser = catchAsync(async (req, res, next) => {
   });
   if (!user) return next(new AppError('Authentication failed', 401));
   const isValidPassword = await bcrypt.compare(password, user.password);
-  if (!isValidPassword) return next(new AppError('Authentication failed', 401));
+  if (!isValidPassword) return next(new AppError('Authentication faileddd', 401));
   const token = generateToken(user.username);
   const messageWithToken = { message: 'Login Successfull', accessToken: token };
   contentNegotiation.sendResponse(req, res, messageWithToken, 201);

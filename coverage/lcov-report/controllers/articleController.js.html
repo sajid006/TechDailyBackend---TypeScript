@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for models/userModel.js</title>
+    <title>Code coverage report for controllers/articleController.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">models</a> userModel.js</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">controllers</a> articleController.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
@@ -95,70 +95,88 @@
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const sequelize = require('./connection');
-const Sequelize = require('sequelize');
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const services = require('../services/articleServices');
+const catchAsync = require('../utils/catchAsync');
+const contentNegotiation = require('../utils/contentNegotiation');
 &nbsp;
-const users = sequelize.define('users', {
-  username: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    primaryKey: { args: true, msg: 'Username must be given' },
-    validate: {
-      is: { args: /^[A-Za-z][A-Za-z0-9_]{4,30}$/, msg: 'Username not acceptable' },
-    },
-  },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: { args: false, msg: 'Name is required.' },
-    validate: {
-      is: { args: /[a-zA-Z][a-zA-Z ]*/, msg: 'Name not acceptable' },
-    },
-  },
-  email: {
-    type: Sequelize.STRING,
-    unique: true,
-    allowNull: { args: false, msg: 'Email is required.' },
-    validate: { isEmail: { msg: 'Invalid email.' } },
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
+exports.getAllArticles = catchAsync(async (req, res, next) =&gt; {
+  const allArticles = await services.findAllArticles();
+  contentNegotiation.sendResponse(req, res, allArticles);
 });
 &nbsp;
-module.exports = { users };
+exports.getArticle = catchAsync(async (req, res, next) =&gt; {
+  const id = req.params.id * 1;
+  const myArticle = await services.findOneArticle(id);
+  contentNegotiation.sendResponse(req, res, myArticle);
+});
+&nbsp;
+exports.postArticle = catchAsync(async (req, res, next) =&gt; {
+  const articleData = {
+    username: req.body.username,
+    title: req.body.title,
+    description: req.body.description,
+    rating: req.body.rating,
+  };
+  const newArticle = await services.createArticle(articleData);
+  contentNegotiation.sendResponse(req, res, newArticle, 201);
+});
+&nbsp;
+exports.patchArticle = catchAsync(async (req, res, next) =&gt; {
+  const title = req.body.title;
+  const id = req.params.id;
+  const myArticle = await services.updateArticle(id, title);
+  contentNegotiation.sendResponse(req, res, myArticle);
+});
+&nbsp;
+exports.deleteArticle = catchAsync(async (req, res, next) =&gt; {
+  const id = req.params.id;
+  await services.removeArticle(id);
+  res.status(204).json({});
+});
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

@@ -1,1 +1,3 @@
 create a route to get all stories of a user 
+write 9 extra functions to test validation fully.
+write test for appError, catchasync, errorhandler, dbconfig
