@@ -22,7 +22,6 @@ const generateToken = (username) => {
 
 const decodeToken = (req, res) => {
   // check if authorization token is available
-  console.log('done');
   const { authorization } = req.headers;
   let token;
   if (authorization && authorization.startsWith('Bearer')) {
@@ -54,7 +53,7 @@ const checkTokenUser = catchAsync(async (req, res, next) => {
 });
 
 const checkTokenArticle = catchAsync(async (req, res, next) => {
-  const usernameFromToken = decodeToken(req, res, next);
+  const usernameFromToken = decodeToken(req, res);
 
   // check if the user is available
   const userFromToken = await users.findOne({
@@ -90,7 +89,7 @@ const validatetUser = catchAsync(async (req, res, next) => {
     return next(new AppError('Please provide username and password', 400));
   }
   const user = await users.findOne({
-    where: { username: `${username}` },
+    where: { username },
   });
   if (!user) return next(new AppError('Authentication failed', 401));
   const isValidPassword = await bcrypt.compare(password, user.password);
@@ -105,5 +104,4 @@ module.exports = {
   checkTokenUser,
   checkTokenArticle,
   validatetUser,
-  decodeToken,
 };

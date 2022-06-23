@@ -27,7 +27,6 @@ const myArticles = [
 describe('Testilng all functions of articleController', () => {
   beforeEach(() => {
     jest.spyOn(contentNegotiation, 'sendResponse').mockImplementation((req, res, inputData, statuscode) => {
-      res.setHeader('Content-type', req.headers.accept);
       res.statusCode = statuscode || 200;
       return res.json(inputData);
     });
@@ -37,11 +36,7 @@ describe('Testilng all functions of articleController', () => {
   });
   test('Testing getAllarticles', async () => {
     jest.spyOn(services, 'findAllArticles').mockReturnValue(myArticles);
-    const mreq = httpMocks.createRequest({
-      headers: {
-        accept: 'application/json',
-      },
-    });
+    const mreq = httpMocks.createRequest({});
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
     const mystatus = 200;
@@ -53,14 +48,10 @@ describe('Testilng all functions of articleController', () => {
     expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, myArticles);
     expect(mres.statusCode).toBe(mystatus);
     expect(mresdata).toEqual(myArticles);
-    expect(mres._headers['content-type']).toBe(mreq.headers.accept);
   });
   test('Testing getArticle', async () => {
     jest.spyOn(services, 'findOneArticle').mockReturnValue(myArticles[0]);
     const mreq = httpMocks.createRequest({
-      headers: {
-        accept: 'application/json',
-      },
       params: {
         id: myArticles[0].id,
       },
@@ -76,16 +67,12 @@ describe('Testilng all functions of articleController', () => {
     expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, myArticles[0]);
     expect(mres.statusCode).toBe(mystatus);
     expect(mresdata).toEqual(myArticles[0]);
-    expect(mres._headers['content-type']).toBe(mreq.headers.accept);
   });
   test('Testing postArticle', async () => {
     jest.spyOn(services, 'createArticle').mockImplementation((articledata) => {
       return articledata;
     });
     const mreq = httpMocks.createRequest({
-      headers: {
-        accept: 'application/json',
-      },
       body: {
         ...myArticles[0],
       },
@@ -107,14 +94,10 @@ describe('Testilng all functions of articleController', () => {
     expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, createdArticle, mystatus);
     expect(mres.statusCode).toBe(mystatus);
     expect(mresdata).toEqual(createdArticle);
-    expect(mres._headers['content-type']).toBe(mreq.headers.accept);
   });
   test('Testing patchArticle', async () => {
     jest.spyOn(services, 'updateArticle').mockReturnValue(1);
     const mreq = httpMocks.createRequest({
-      headers: {
-        accept: 'application/json',
-      },
       params: {
         id: myArticles[0].id,
       },
@@ -133,7 +116,6 @@ describe('Testilng all functions of articleController', () => {
     expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, 1);
     expect(mres.statusCode).toBe(mystatus);
     expect(mresdata).toEqual(1);
-    expect(mres._headers['content-type']).toBe(mreq.headers.accept);
   });
   test('Testing deleteArticle', async () => {
     jest.spyOn(services, 'removeArticle').mockReturnValue();

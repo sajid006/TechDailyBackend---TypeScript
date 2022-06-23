@@ -66,7 +66,9 @@ describe('Testilng all functions of contentNegotiation', () => {
     const data = mres.send()._getData();
     expect(data).toBe(xml);
     expect(mres.statusCode).toBe(myStatus);
-    console.log('sajid', mres.format()._getHeaders());
+    //console.log(mres._headers);
+    //console.log('sajid', mres._getHeaders());
+    //console.log('hasan', mres.send()._getHeaders());
     //const header = mres.send()._getHeaders();
     //expect(header['content-type']).toBe('application/xml');
   });

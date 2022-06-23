@@ -26,7 +26,6 @@ const myUsers = [
 describe('Testilng all functions of userController', () => {
   beforeEach(() => {
     jest.spyOn(contentNegotiation, 'sendResponse').mockImplementation((req, res, inputData, statuscode) => {
-      res.setHeader('Content-type', req.headers.accept);
       res.statusCode = statuscode || 200;
       return res.json(inputData);
     });
@@ -36,11 +35,7 @@ describe('Testilng all functions of userController', () => {
   });
   test('Testing getAllUsers', async () => {
     jest.spyOn(services, 'findAllUsers').mockReturnValue(myUsers);
-    const mreq = httpMocks.createRequest({
-      headers: {
-        accept: 'application/json',
-      },
-    });
+    const mreq = httpMocks.createRequest();
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
     const mystatus = 200;
@@ -52,14 +47,10 @@ describe('Testilng all functions of userController', () => {
     expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, myUsers);
     expect(mres.statusCode).toBe(mystatus);
     expect(mresdata).toEqual(myUsers);
-    expect(mres._headers['content-type']).toBe(mreq.headers.accept);
   });
   test('Testing getUser', async () => {
     jest.spyOn(services, 'findOneUser').mockReturnValue(myUsers[0]);
     const mreq = httpMocks.createRequest({
-      headers: {
-        accept: 'application/json',
-      },
       params: {
         id: myUsers[0].username,
       },
@@ -75,7 +66,6 @@ describe('Testilng all functions of userController', () => {
     expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, myUsers[0]);
     expect(mres.statusCode).toBe(mystatus);
     expect(mresdata).toEqual(myUsers[0]);
-    expect(mres._headers['content-type']).toBe(mreq.headers.accept);
   });
   test('Testing postUser', async () => {
     jest.spyOn(bcrypt, 'hash').mockImplementation((password) => {
@@ -95,9 +85,6 @@ describe('Testilng all functions of userController', () => {
     delete userWithToken.createdAt;
     delete userWithToken.updatedAt;
     const mreq = httpMocks.createRequest({
-      headers: {
-        accept: 'application/json',
-      },
       body: {
         ...myUsers[0],
       },
@@ -124,14 +111,10 @@ describe('Testilng all functions of userController', () => {
     expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, userWithToken, mystatus);
     expect(mres.statusCode).toBe(mystatus);
     expect(mresdata).toEqual(userWithToken);
-    expect(mres._headers['content-type']).toBe(mreq.headers.accept);
   });
   test('Testing patchUser', async () => {
     jest.spyOn(services, 'updateUser').mockReturnValue(1);
     const mreq = httpMocks.createRequest({
-      headers: {
-        accept: 'application/json',
-      },
       params: {
         id: myUsers[0].username,
       },
@@ -151,7 +134,6 @@ describe('Testilng all functions of userController', () => {
     expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, 1);
     expect(mres.statusCode).toBe(mystatus);
     expect(mresdata).toEqual(1);
-    expect(mres._headers['content-type']).toBe(mreq.headers.accept);
   });
   test('Testing deleteUser', async () => {
     jest.spyOn(services, 'removeUser').mockReturnValue();
