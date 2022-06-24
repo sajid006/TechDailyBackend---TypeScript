@@ -26,7 +26,7 @@ describe('Testilng all functions of userService', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  test('Testing validateUser', async () => {
+  test('Testing validateUser for 1', async () => {
     jest.spyOn(users, 'findOne').mockReturnValue(myUsers[0]);
     const valid = await userServices.validateUser(myUsers[0].username);
     expect(users.findOne).toHaveBeenCalledTimes(1);
@@ -36,6 +36,17 @@ describe('Testilng all functions of userService', () => {
       },
     });
     expect(valid).toEqual(1);
+  });
+  test('Testing validateUser for 0', async () => {
+    jest.spyOn(users, 'findOne').mockReturnValue();
+    const valid = await userServices.validateUser(myUsers[0].username);
+    expect(users.findOne).toHaveBeenCalledTimes(1);
+    expect(users.findOne).toHaveBeenCalledWith({
+      where: {
+        username: myUsers[0].username,
+      },
+    });
+    expect(valid).toEqual(0);
   });
   test('Testing findAllUsers', async () => {
     jest.spyOn(users, 'findAll').mockReturnValue(myUsers);

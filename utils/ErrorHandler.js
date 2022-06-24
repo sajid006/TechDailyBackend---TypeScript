@@ -1,5 +1,3 @@
-const winston = require('../config/winston');
-
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -23,11 +21,11 @@ const sendErrorProd = (err, res) => {
   }
 };
 
-module.exports = (err, req, res, next) => {
+const errorHandler = (err, req, res, next) => {
   if (!res.headersSent) {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
-    winston.error(`${err.statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+    console.log(`hello ${err.statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
     if (process.env.NODE_ENV === 'development') {
       sendErrorDev(err, res);
@@ -36,3 +34,4 @@ module.exports = (err, req, res, next) => {
     }
   }
 };
+module.exports = { errorHandler };

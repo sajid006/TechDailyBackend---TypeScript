@@ -3,7 +3,8 @@ const articleRouter = require('./routes/articleRoutes');
 const userRouter = require('./routes/userRoutes');
 const helmet = require('helmet');
 const AppError = require('./utils/AppError');
-const globalErrorHandler = require('./utils/errorHandler');
+require('./config/winston');
+const globalErrorHandler = require('./utils/errorHandler').errorHandler;
 const compression = require('compression');
 const dbConnect = require('./config/dbconnect');
 
@@ -20,7 +21,7 @@ app.use('/api/v1/articles', articleRouter);
 app.use('/api/v1/users', userRouter);
 
 app.all('*', (req, res, next) => {
-    next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));
+  next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));
 });
 
 app.use(globalErrorHandler);

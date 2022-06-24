@@ -115,4 +115,18 @@ describe('Testilng all functions of contentNegotiation', () => {
     expect(data).toEqual(jeson);
     expect(mres.statusCode).toBe(200);
   });
+  test('Testing sendResponse for default', async () => {
+    const mreq = httpMocks.createRequest({
+      headers: {
+        accept: 'AnythingThatIsNotAvailable',
+      },
+    });
+    const mres = httpMocks.createResponse({
+      req: mreq,
+    });
+    await contentNegotiation.sendResponse(mreq, mres, myUsers[0]);
+    const data = mres.send()._getData();
+    expect(data).toEqual(jeson);
+    expect(mres.statusCode).toBe(200);
+  });
 });

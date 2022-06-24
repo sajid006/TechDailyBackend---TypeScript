@@ -27,7 +27,7 @@ describe('Testilng all functions of articleService', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  test('Testing validateID', async () => {
+  test('Testing validateID for 1', async () => {
     jest.spyOn(articles, 'findOne').mockImplementation(() => {
       return myArticles[0];
     });
@@ -39,6 +39,20 @@ describe('Testilng all functions of articleService', () => {
       },
     });
     expect(valid).toEqual(1);
+  });
+  test('Testing validateID for 0', async () => {
+    jest.spyOn(articles, 'findOne').mockImplementation(() => {
+      let ret;
+      return ret;
+    });
+    const valid = await articleServices.validateID(myArticles[0].id);
+    expect(articles.findOne).toHaveBeenCalledTimes(1);
+    expect(articles.findOne).toHaveBeenCalledWith({
+      where: {
+        id: myArticles[0].id,
+      },
+    });
+    expect(valid).toEqual(0);
   });
   test('Testing findAllArticles', async () => {
     jest.spyOn(articles, 'findAll').mockReturnValue(myArticles);

@@ -24,22 +24,16 @@ const decodeToken = (req, res) => {
   // check if authorization token is available
   const { authorization } = req.headers;
   let token;
-  console.log(authorization);
   if (authorization && authorization.startsWith('Bearer')) {
-    console.log('nooooo');
     token = authorization.split(' ')[1];
   } else {
-    console.log('yes');
     return undefined;
   }
-  console.log(token);
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  console.log('come');
   return decoded.username;
 };
 const checkTokenUser = catchAsync(async (req, res, next) => {
   const usernameFromToken = decodeToken(req, res);
-  console.log('gfhg', usernameFromToken);
   if (!usernameFromToken) {
     return next(new AppError('Your token does not contain any user', 401));
   }

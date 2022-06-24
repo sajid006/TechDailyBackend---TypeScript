@@ -58,6 +58,21 @@ describe('Testilng only generateToken function', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+  test('Testing a call in catchasync', async () => {
+    jest.spyOn(users, 'findOne').mockReturnValue();
+    const mreq = httpMocks.createRequest({
+      headers: {
+        authorization: 'Bearer Wrong',
+      },
+    });
+    const mres = httpMocks.createResponse();
+    const mnext = jest.fn();
+    const myError = new jwt.JsonWebTokenError('jwt malformed');
+    await validation.checkTokenUser(mreq, mres, mnext);
+    expect(mnext).toHaveBeenCalledTimes(1);
+    expect(mnext).toHaveBeenCalledWith(myError);
+    expect(users.findOne).toHaveBeenCalledTimes(0);
+  });
   test('Testing generateToken', async () => {
     jest.spyOn(jwt, 'sign').mockImplementation((object1, object2, object3) => {
       return object1.username + object2 + object3.expiresIn;
@@ -76,6 +91,7 @@ describe('Testilng only generateToken function', () => {
     expect(token).toBe(myUsers[0].username + process.env.JWT_SECRET + process.env.JWT_EXPIRATION_TIME);
   });
 });
+
 describe('Testing all cases of checkTokenUser', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -213,7 +229,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
     const myError = new AppError('Your token does not contain any user', 401);
-    await validation.checkTokenUser(mreq, mres, mnext);
+    await validation.checkTokenArticle(mreq, mres, mnext);
     expect(mnext).toHaveBeenCalledTimes(1);
     expect(mnext).toHaveBeenCalledWith(myError);
     expect(users.findOne).toHaveBeenCalledTimes(0);
@@ -278,7 +294,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     expect(mnext).toHaveBeenCalledWith();
     expect(mreq.username).toBe(myUsers[0].username);
   });
-  test('Testing else of fourth if', async () => {
+  test('Testing fifth if', async () => {
     jest.spyOn(users, 'findOne').mockReturnValue(myUsers[0]);
     jest.spyOn(articles, 'findOne').mockReturnValue(myArticles[1]);
     const mreq = httpMocks.createRequest({
@@ -286,7 +302,7 @@ describe('Testing all cases of checkTokenArticle', () => {
         authorization: `Bearer ${token}`,
       },
       params: {
-        id: myUsers[0].username,
+        id: myArticles[0].id,
       },
     });
     const mres = httpMocks.createResponse();
@@ -299,7 +315,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     });
     expect(articles.findOne).toHaveBeenCalledTimes(1);
     expect(articles.findOne).toHaveBeenCalledWith({
-      where: { id: myUsers[0].username },
+      where: { id: myArticles[0].id },
     });
     expect(mnext).toHaveBeenCalledTimes(1);
     expect(mnext).toHaveBeenCalledWith(myError);
@@ -310,7 +326,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     jest.spyOn(articles, 'findOne').mockReturnValue(myArticles[0]);
     const mreq = httpMocks.createRequest({
       params: {
-        id: 1,
+        id: myArticles[0].id,
       },
       headers: {
         authorization: `Bearer ${token}`,
@@ -328,6 +344,8 @@ describe('Testing all cases of checkTokenArticle', () => {
       where: { id: myArticles[0].id },
     });
     expect(mreq.username).toBe(myUsers[0].username);
+    expect(mnext).toHaveBeenCalledTimes(1);
+    expect(mnext).toHaveBeenCalledWith();
   });
 });
 
