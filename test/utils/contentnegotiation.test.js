@@ -1,24 +1,6 @@
 const contentNegotiation = require('../../utils/contentNegotiation');
 const httpMocks = require('node-mocks-http');
-
-const myUsers = [
-  {
-    username: 'sajid1',
-    name: 'Sajid Hasan',
-    email: 'sajid1@id.com',
-    password: '$2b$10$G.vWTLfgzdjo1JjpiJMO2.bUKXL/KvsuygBAd1QvWUepuoXpr8QK6',
-    createdAt: '2022-06-21T06:08:44.000Z',
-    updatedAt: '2022-06-21T06:08:44.000Z',
-  },
-  {
-    username: 'sajid',
-    name: 'Sajid Hasan',
-    email: 'fwxxcai@d.com',
-    password: '$2b$10$QjvZDwwRlqutEUeuuhdq1eGS/5mTBnjwdsXj2xbSKJ2XmpzccDR7y',
-    createdAt: '2022-06-17T05:18:39.000Z',
-    updatedAt: '2022-06-17T05:18:39.000Z',
-  },
-];
+const mUsers = require('../mockData/mUsers');
 
 const jeson = {
   username: 'sajid1',
@@ -61,11 +43,11 @@ describe('Testilng all functions of contentNegotiation', () => {
     const mres = httpMocks.createResponse({
       req: mreq,
     });
-    const myStatus = 201;
-    await contentNegotiation.sendResponse(mreq, mres, myUsers[0], myStatus);
+    const mStatus = 201;
+    await contentNegotiation.sendResponse(mreq, mres, mUsers[0], mStatus);
     const data = mres.send()._getData();
     expect(data).toBe(xml);
-    expect(mres.statusCode).toBe(myStatus);
+    expect(mres.statusCode).toBe(mStatus);
     //console.log(mres._headers);
     //console.log('sajid', mres._getHeaders());
     //console.log('hasan', mres.send()._getHeaders());
@@ -81,11 +63,11 @@ describe('Testilng all functions of contentNegotiation', () => {
     const mres = httpMocks.createResponse({
       req: mreq,
     });
-    const myStatus = 201;
-    await contentNegotiation.sendResponse(mreq, mres, myUsers[0], myStatus);
+    const mStatus = 201;
+    await contentNegotiation.sendResponse(mreq, mres, mUsers[0], mStatus);
     const data = mres.send()._getData();
     expect(data).toBe(html);
-    expect(mres.statusCode).toBe(myStatus);
+    expect(mres.statusCode).toBe(mStatus);
   });
   test('Testing sendResponse for plain text', async () => {
     const mreq = httpMocks.createRequest({
@@ -96,7 +78,7 @@ describe('Testilng all functions of contentNegotiation', () => {
     const mres = httpMocks.createResponse({
       req: mreq,
     });
-    await contentNegotiation.sendResponse(mreq, mres, myUsers[0]);
+    await contentNegotiation.sendResponse(mreq, mres, mUsers[0]);
     const data = mres.send()._getData();
     expect(data).toBe(plainText);
     expect(mres.statusCode).toBe(200);
@@ -110,7 +92,7 @@ describe('Testilng all functions of contentNegotiation', () => {
     const mres = httpMocks.createResponse({
       req: mreq,
     });
-    await contentNegotiation.sendResponse(mreq, mres, myUsers[0]);
+    await contentNegotiation.sendResponse(mreq, mres, mUsers[0]);
     const data = mres.send()._getData();
     expect(data).toEqual(jeson);
     expect(mres.statusCode).toBe(200);
@@ -124,7 +106,7 @@ describe('Testilng all functions of contentNegotiation', () => {
     const mres = httpMocks.createResponse({
       req: mreq,
     });
-    await contentNegotiation.sendResponse(mreq, mres, myUsers[0]);
+    await contentNegotiation.sendResponse(mreq, mres, mUsers[0]);
     const data = mres.send()._getData();
     expect(data).toEqual(jeson);
     expect(mres.statusCode).toBe(200);
