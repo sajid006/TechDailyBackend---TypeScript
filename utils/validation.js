@@ -70,9 +70,9 @@ const checkTokenArticle = catchAsync(async (req, res, next) => {
   // check if the user is the same as the one trying to update/delete the user
 
   let usernameFromReq;
-  if (!req.body.username && !req.params.id) return next(new AppError('Please provide a username', 401));
+  if (!req.body.username && !req.params.id) return next(new AppError('Please provide a username or article id', 401));
   if (req.body.username) usernameFromReq = req.body.username;
-  else if (req.params.id) {
+  else {
     const article = await articles.findOne({
       where: { id: req.params.id },
     });

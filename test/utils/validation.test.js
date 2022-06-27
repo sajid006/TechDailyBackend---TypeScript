@@ -225,7 +225,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     });
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
-    const mError = new AppError('Please provide a username', 401);
+    const mError = new AppError('Please provide a username or article id', 401);
     await validation.checkTokenArticle(mreq, mres, mnext);
     expect(users.findOne).toHaveBeenCalledTimes(1);
     expect(users.findOne).toHaveBeenCalledWith({
