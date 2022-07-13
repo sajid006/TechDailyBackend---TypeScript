@@ -7,11 +7,18 @@ require('./config/winston');
 const globalErrorHandler = require('./utils/errorHandler').errorHandler;
 const compression = require('compression');
 const dbConnect = require('./config/dbconnect');
-
+const cors = require('cors');
 const app = express();
 
 app.use(helmet());
-
+app.use(
+  cors({
+    origin: 'http://localhost:3001',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  })
+);
 app.use(compression());
 
 app.use(express.json());

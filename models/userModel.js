@@ -19,7 +19,7 @@ const users = sequelize.define('users', {
   },
   email: {
     type: Sequelize.STRING,
-    unique: true,
+    unique: { args: false, msg: 'Email must be unique' },
     allowNull: { args: false, msg: 'Email is required.' },
     validate: { isEmail: { msg: 'Invalid email.' } },
   },

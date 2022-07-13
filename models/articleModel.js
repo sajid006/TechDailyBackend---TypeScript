@@ -22,7 +22,7 @@ const articles = sequelize.define('articles', {
     allowNull: { args: false, msg: 'Title is required.' },
   },
   description: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(10000),
   },
   rating: {
     type: Sequelize.INTEGER,

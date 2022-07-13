@@ -317,10 +317,10 @@ DA:7,26
 DA:11,2
 LF:6
 LH:6
-BRDA:5,0,0,26
-BRDA:5,0,1,0
+BRDA:5,0,0,25
+BRDA:5,0,1,1
 BRF:2
-BRH:1
+BRH:2
 end_of_record
 TN:
 SF:utils\catchAsync.js
