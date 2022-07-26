@@ -8,6 +8,7 @@ const globalErrorHandler = require('./utils/errorHandler').errorHandler;
 const compression = require('compression');
 const dbConnect = require('./config/dbconnect');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const app = express();
 
 app.use(helmet());
@@ -17,11 +18,13 @@ app.use(
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,
+    credentials: true,
   })
 );
 app.use(compression());
 
 app.use(express.json());
+app.use(cookieParser());
 dbConnect();
 
 app.use('/api/v1/articles', articleRouter);

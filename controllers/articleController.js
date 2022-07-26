@@ -7,6 +7,18 @@ exports.getAllArticles = catchAsync(async (req, res, next) => {
   contentNegotiation.sendResponse(req, res, allArticles);
 });
 
+exports.getUserArticles = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  const userArticles = await services.findUserArticles(id);
+  contentNegotiation.sendResponse(req, res, userArticles);
+});
+
+exports.getSearchedArticles = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  const userArticles = await services.findSearchedArticles(id);
+  contentNegotiation.sendResponse(req, res, userArticles);
+});
+
 exports.getArticle = catchAsync(async (req, res, next) => {
   const id = req.params.id * 1;
   const myArticle = await services.findOneArticle(id);
@@ -27,7 +39,8 @@ exports.postArticle = catchAsync(async (req, res, next) => {
 exports.patchArticle = catchAsync(async (req, res, next) => {
   const title = req.body.title;
   const id = req.params.id;
-  const myArticle = await services.updateArticle(id, title);
+  const description = req.body.description;
+  const myArticle = await services.updateArticle(id, title, description);
   contentNegotiation.sendResponse(req, res, myArticle);
 });
 

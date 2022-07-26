@@ -1,5 +1,7 @@
 const articleModel = require('../models/articleModel');
 const articles = articleModel.articles;
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 exports.validateID = async (value) => {
   const validarticle = await articles.findOne({
@@ -14,6 +16,35 @@ exports.validateID = async (value) => {
 exports.findAllArticles = async () => {
   const articlesList = await articles.findAll();
   return articlesList;
+};
+
+exports.findUserArticles = async (id) => {
+  const articleList = await articles.findAll({
+    where: {
+      username: id,
+    },
+  });
+  return articleList;
+};
+
+exports.findSearchedArticles = async (id) => {
+  const articleList = await articles.findAll({
+    where: {
+      [Op.or]: [
+        {
+          username: {
+            [Op.like]: '%' + id + '%',
+          },
+        },
+        {
+          title: {
+            [Op.like]: '%' + id + '%',
+          },
+        },
+      ],
+    },
+  });
+  return articleList;
 };
 
 exports.findOneArticle = async (id) => {
@@ -31,10 +62,11 @@ exports.createArticle = async (articleData) => {
   return newArticle;
 };
 
-exports.updateArticle = async (id, title) => {
+exports.updateArticle = async (id, title, description) => {
   const myArticle = await articles.update(
     {
       title,
+      description,
     },
     {
       where: {
@@ -53,3 +85,16 @@ exports.removeArticle = async (id) => {
   });
   return deleted;
 };
+
+// $or: [
+//   {
+//     username: {
+//       [Op.like]: '%' + id + '%',
+//     },
+//   },
+//   {
+//     title: {
+//       [Op.like]: '%' + id + '%',
+//     },
+//   },
+// ],

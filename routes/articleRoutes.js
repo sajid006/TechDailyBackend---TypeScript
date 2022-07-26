@@ -20,5 +20,6 @@ router
     articleController.patchArticle
   )
   .delete(articleAuthMiddleware.checkID, validation.checkTokenArticle, articleController.deleteArticle);
+router.route('/search/:id').get(articleController.getSearchedArticles);
 
 module.exports = router;

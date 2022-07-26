@@ -14,10 +14,10 @@ exports.checkID = catchAsync(async (req, res, next) => {
 });
 
 exports.checkBody = (req, res, next) => {
-  if (!req.body.title) {
+  if (!req.body.title || !req.body.description) {
     return res.status(400).json({
       status: 'fail',
-      message: 'title missing',
+      message: 'Title or description missing',
     });
   }
   next();

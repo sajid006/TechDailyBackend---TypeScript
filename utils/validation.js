@@ -22,15 +22,22 @@ const generateToken = (username) => {
 
 const decodeToken = (req, res) => {
   // check if authorization token is available
-  const { authorization } = req.headers;
   let token;
-  if (authorization && authorization.startsWith('Bearer')) {
-    token = authorization.split(' ')[1];
+  if (req.headers.cookie) {
+    token = req.headers.cookie.split('=')[1];
   } else {
     return undefined;
   }
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   return decoded.username;
+};
+const verifyToken = (req, res, next) => {
+  const username = decodeToken(req, res);
+  res.send(username);
+};
+const logoutUser = (req, res, next) => {
+  res.cookie('user', '', { httpOnly: true, maxAge: 0 });
+  res.send();
 };
 const checkTokenUser = catchAsync(async (req, res, next) => {
   const usernameFromToken = decodeToken(req, res);
@@ -99,8 +106,9 @@ const validatetUser = catchAsync(async (req, res, next) => {
   const isValidPassword = await bcrypt.compare(password, user.password);
   if (!isValidPassword) return next(new AppError('Authentication faileddd', 401));
   const token = generateToken(user.username);
-  const messageWithToken = { message: 'Login Successfull', accessToken: token };
-  contentNegotiation.sendResponse(req, res, messageWithToken, 201);
+  const messageWithUsername = { message: 'Login Successfull', username: username };
+  res.cookie('user', token, { httpOnly: true });
+  contentNegotiation.sendResponse(req, res, messageWithUsername, 201);
 });
 
 module.exports = {
@@ -108,4 +116,6 @@ module.exports = {
   checkTokenUser,
   checkTokenArticle,
   validatetUser,
+  verifyToken,
+  logoutUser,
 };
