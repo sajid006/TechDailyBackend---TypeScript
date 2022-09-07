@@ -56,15 +56,17 @@ describe('Testilng all functions of userController', () => {
     });
     jest.spyOn(services, 'createUser').mockImplementation((userdata) => {
       const returnData = {};
+      returnData.email = userdata.email;
+      returnData.name = userdata.name;
+      returnData.password = userdata.password;
       returnData.username = userdata.username;
-      returnData.dataValues = { ...userdata };
       return returnData;
     });
     jest.spyOn(validation, 'generateToken').mockImplementation((inputData) => {
       return 'sajid' + inputData + 'hasan';
     });
-    const accessToken = 'sajid' + mUsers[0].username + 'hasan';
-    const userWithToken = { ...mUsers[0], accessToken };
+    //const accessToken = 'sajid' + mUsers[0].username + 'hasan';
+    const userWithToken = { ...mUsers[0] };
     delete userWithToken.createdAt;
     delete userWithToken.updatedAt;
     const mreq = httpMocks.createRequest({

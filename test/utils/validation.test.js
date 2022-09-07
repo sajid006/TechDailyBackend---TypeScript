@@ -11,12 +11,12 @@ const validation = require('../../utils/validation');
 const mArticles = require('../mockData/mArticles');
 const mUsers = require('../mockData/mUsers');
 const wrongToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6InNhamlkMSIsImlhdCI6MTY1NTk4NDU1MywiZXhwIjoxNjU2NDE2NTUzfQ.ytEnomDCnz5PvszZxjBQWDTsc6xTUDYzuOtR-NCNips';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IopXVCJ9.eyJwYXNzd29yZCI6InNhamlkMSIsImlhdCI6MTY1NTk4NDU1MywiZXhwIjoxNjU2NDE2NTUzfQ.ytEnomDCnz5PvszZxjBQWDTsc6xTUDYzuOtR-NCNips';
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNhamlkMSIsImlhdCI6MTY1NTk2MDM1NiwiZXhwIjoxNjU2MzkyMzU2fQ.98UiIpXxpggcMAYgFw7wb_SLar-sBoNDLgBU20D_CKs';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNhamlkMSIsImlhdCI6MTY2MTk0MjE0MywiZXhwIjoxNjY2MjYyMTQzfQ.bge7tEiFOBFp-kokqv6IGb1Z_2RkG62Qt6yv-xbnMps';
 process.env.JWT_SECRET = 'xiaomi-redmi-note-ten-pro-max-ultra%';
-process.env.JWT_EXPIRATION_TIME = '5d';
-describe('Testilng only generateToken function', () => {
+process.env.JWT_EXPIRATION_TIME = '50d';
+describe('Testing only generateToken function', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -24,12 +24,12 @@ describe('Testilng only generateToken function', () => {
     jest.spyOn(users, 'findOne').mockReturnValue();
     const mreq = httpMocks.createRequest({
       headers: {
-        authorization: 'Bearer Wrong',
+        cookie: `user=${wrongToken}`,
       },
     });
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
-    const mError = new jwt.JsonWebTokenError('jwt malformed');
+    const mError = new jwt.JsonWebTokenError('invalid signature');
     await validation.checkTokenUser(mreq, mres, mnext);
     expect(mnext).toHaveBeenCalledTimes(1);
     expect(mnext).toHaveBeenCalledWith(mError);
@@ -53,7 +53,42 @@ describe('Testilng only generateToken function', () => {
     expect(token).toBe(mUsers[0].username + process.env.JWT_SECRET + process.env.JWT_EXPIRATION_TIME);
   });
 });
-
+describe('Testing only verifyToken', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  test('Testing verifyToken', async () => {
+    const mreq = httpMocks.createRequest({
+      headers: {
+        cookie: `user=${token}`,
+      },
+    });
+    const mres = httpMocks.createResponse();
+    jest.spyOn(mres, 'send').mockImplementation((input) => {
+      return input;
+    });
+    const mnext = jest.fn();
+    const verify = await validation.verifyToken(mreq, mres, mnext);
+    expect(verify).toEqual(mArticles[0].username);
+  });
+});
+describe('Testing only logOutUser', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  test('Testing logOutUser', async () => {
+    const mreq = httpMocks.createRequest();
+    const mres = httpMocks.createResponse();
+    jest.spyOn(mres, 'send').mockImplementation((input) => {
+      return input;
+    });
+    jest.spyOn(mres, 'cookie').mockReturnValue();
+    const mnext = jest.fn();
+    const verify = await validation.logoutUser(mreq, mres, mnext);
+    expect(mres.cookie).toHaveBeenCalledTimes(1);
+    expect(verify).toEqual();
+  });
+});
 describe('Testing all cases of checkTokenUser', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -98,7 +133,7 @@ describe('Testing all cases of checkTokenUser', () => {
         id: mUsers[0].username,
       },
       headers: {
-        authorization: `Bearer ${token}`,
+        cookie: `user=${token}`,
       },
     });
     const mres = httpMocks.createResponse();
@@ -116,12 +151,12 @@ describe('Testing all cases of checkTokenUser', () => {
     jest.spyOn(users, 'findOne').mockReturnValue(mUsers[0]);
     const mreq = httpMocks.createRequest({
       headers: {
-        authorization: `Bearer ${token}`,
+        cookie: `user=${token}`,
       },
     });
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
-    const mError = new AppError('You are not authorized', 401);
+    const mError = new AppError('You are not authorized', 501);
     await validation.checkTokenUser(mreq, mres, mnext);
     expect(mnext).toHaveBeenCalledTimes(1);
     expect(mnext).toHaveBeenCalledWith(mError);
@@ -137,7 +172,7 @@ describe('Testing all cases of checkTokenUser', () => {
         id: mUsers[1].username,
       },
       headers: {
-        authorization: `Bearer ${token}`,
+        cookie: `user=${token}`,
       },
     });
     const mres = httpMocks.createResponse();
@@ -158,7 +193,7 @@ describe('Testing all cases of checkTokenUser', () => {
         id: mUsers[0].username,
       },
       headers: {
-        authorization: `Bearer ${token}`,
+        cookie: `user=${token}`,
       },
     });
     const mres = httpMocks.createResponse();
@@ -184,9 +219,6 @@ describe('Testing all cases of checkTokenArticle', () => {
       params: {
         id: mUsers[0].username,
       },
-      headers: {
-        authorization: 'nothing',
-      },
     });
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
@@ -201,7 +233,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     jest.spyOn(users, 'findOne').mockReturnValue();
     const mreq = httpMocks.createRequest({
       headers: {
-        authorization: `Bearer ${token}`,
+        cookie: `user=${token}`,
       },
     });
     const mres = httpMocks.createResponse();
@@ -220,7 +252,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     jest.spyOn(users, 'findOne').mockReturnValue(mUsers[0]);
     const mreq = httpMocks.createRequest({
       headers: {
-        authorization: `Bearer ${token}`,
+        cookie: `user=${token}`,
       },
     });
     const mres = httpMocks.createResponse();
@@ -239,7 +271,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     jest.spyOn(users, 'findOne').mockReturnValue(mUsers[0]);
     const mreq = httpMocks.createRequest({
       headers: {
-        authorization: `Bearer ${token}`,
+        cookie: `user=${token}`,
       },
       body: {
         username: mUsers[0].username,
@@ -261,7 +293,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     jest.spyOn(articles, 'findOne').mockReturnValue(mArticles[1]);
     const mreq = httpMocks.createRequest({
       headers: {
-        authorization: `Bearer ${token}`,
+        cookie: `user=${token}`,
       },
       params: {
         id: mArticles[0].id,
@@ -291,7 +323,7 @@ describe('Testing all cases of checkTokenArticle', () => {
         id: mArticles[0].id,
       },
       headers: {
-        authorization: `Bearer ${token}`,
+        cookie: `user=${token}`,
       },
     });
     const mres = httpMocks.createResponse();
@@ -424,8 +456,8 @@ describe('Testing all cases of validateUser', () => {
     expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, expect.anything(), 201);
     expect(mres.statusCode).toBe(mstatus);
     expect(mresdata).toEqual({
-      accessToken: mUsers[0].username + process.env.JWT_SECRET + process.env.JWT_EXPIRATION_TIME,
       message: 'Login Successfull',
+      username: mUsers[0].username,
     });
     expect(mnext).toHaveBeenCalledTimes(0);
   });

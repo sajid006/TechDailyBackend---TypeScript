@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>61/61</span>
+                <span class='fraction'>67/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>32/32</span>
+                <span class='fraction'>30/30</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>57/57</span>
+                <span class='fraction'>63/63</span>
             </div>
         
             
@@ -174,7 +174,17 @@
 <a name='L109'></a><a href='#L109'>109</a>
 <a name='L110'></a><a href='#L110'>110</a>
 <a name='L111'></a><a href='#L111'>111</a>
-<a name='L112'></a><a href='#L112'>112</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -198,15 +208,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">7x</span>
@@ -277,9 +294,12 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -309,15 +329,22 @@ const generateToken = (username) =&gt; {
 &nbsp;
 const decodeToken = (req, res) =&gt; {
   // check if authorization token is available
-  const { authorization } = req.headers;
   let token;
-  if (authorization &amp;&amp; authorization.startsWith('Bearer')) {
-    token = authorization.split(' ')[1];
+  if (req.headers.cookie) {
+    token = req.headers.cookie.split('=')[1];
   } else {
     return undefined;
   }
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   return decoded.username;
+};
+const verifyToken = (req, res, next) =&gt; {
+  const username = decodeToken(req, res);
+  return res.send(username);
+};
+const logoutUser = (req, res, next) =&gt; {
+  res.cookie('user', '', { httpOnly: true, maxAge: 0 });
+  return res.send();
 };
 const checkTokenUser = catchAsync(async (req, res, next) =&gt; {
   const usernameFromToken = decodeToken(req, res);
@@ -386,8 +413,9 @@ const validatetUser = catchAsync(async (req, res, next) =&gt; {
   const isValidPassword = await bcrypt.compare(password, user.password);
   if (!isValidPassword) return next(new AppError('Authentication faileddd', 401));
   const token = generateToken(user.username);
-  const messageWithToken = { message: 'Login Successfull', accessToken: token };
-  contentNegotiation.sendResponse(req, res, messageWithToken, 201);
+  const messageWithUsername = { message: 'Login Successfull', username: username };
+  res.cookie('user', token, { httpOnly: true });
+  contentNegotiation.sendResponse(req, res, messageWithUsername, 201);
 });
 &nbsp;
 module.exports = {
@@ -395,6 +423,8 @@ module.exports = {
   checkTokenUser,
   checkTokenArticle,
   validatetUser,
+  verifyToken,
+  logoutUser,
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -403,7 +433,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Jun 27 2022 16:31:42 GMT+0600 (Bangladesh Standard Time)
+                at Wed Aug 31 2022 17:27:55 GMT+0600 (Bangladesh Standard Time)
             </div>
         <script src="../prettify.js"></script>
         <script>

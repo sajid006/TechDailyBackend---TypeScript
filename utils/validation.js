@@ -33,11 +33,11 @@ const decodeToken = (req, res) => {
 };
 const verifyToken = (req, res, next) => {
   const username = decodeToken(req, res);
-  res.send(username);
+  return res.send(username);
 };
 const logoutUser = (req, res, next) => {
   res.cookie('user', '', { httpOnly: true, maxAge: 0 });
-  res.send();
+  return res.send();
 };
 const checkTokenUser = catchAsync(async (req, res, next) => {
   const usernameFromToken = decodeToken(req, res);

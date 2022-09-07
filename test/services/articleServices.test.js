@@ -1,7 +1,8 @@
 const articleModel = require('../../models/articleModel');
 const articles = articleModel.articles;
 const articleServices = require('../../services/articleServices');
-
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 const mArticles = require('../mockData/mArticles');
 
 describe('Testilng all functions of articleService', () => {
@@ -40,6 +41,39 @@ describe('Testilng all functions of articleService', () => {
     const articlesList = await articleServices.findAllArticles();
     expect(articles.findAll).toHaveBeenCalledTimes(1);
     expect(articlesList).toBe(mArticles);
+  });
+  test('Testing findUserArticles', async () => {
+    jest.spyOn(articles, 'findAll').mockReturnValue(mArticles[0]);
+    const articlesList = await articleServices.findUserArticles(mArticles[0].username);
+    expect(articles.findAll).toHaveBeenCalledTimes(1);
+    expect(articles.findAll).toHaveBeenCalledWith({
+      where: {
+        username: mArticles[0].username,
+      },
+    });
+    expect(articlesList).toBe(mArticles[0]);
+  });
+  test('Testing findSearchedArticles', async () => {
+    jest.spyOn(articles, 'findAll').mockReturnValue(mArticles[0]);
+    const articlesList = await articleServices.findSearchedArticles(mArticles[0].title);
+    expect(articles.findAll).toHaveBeenCalledTimes(1);
+    expect(articles.findAll).toHaveBeenCalledWith({
+      where: {
+        [Op.or]: [
+          {
+            username: {
+              [Op.like]: '%' + mArticles[0].title + '%',
+            },
+          },
+          {
+            title: {
+              [Op.like]: '%' + mArticles[0].title + '%',
+            },
+          },
+        ],
+      },
+    });
+    expect(articlesList).toBe(mArticles[0]);
   });
   test('Testing findOneArticle', async () => {
     jest.spyOn(articles, 'findOne').mockReturnValue(mArticles[0]);

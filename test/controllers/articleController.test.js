@@ -14,7 +14,7 @@ describe('Testilng all functions of articleController', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  test('Testing getAllarticles', async () => {
+  test('Testing getAllArticles', async () => {
     jest.spyOn(services, 'findAllArticles').mockReturnValue(mArticles);
     const mreq = httpMocks.createRequest({});
     const mres = httpMocks.createResponse();
@@ -28,6 +28,44 @@ describe('Testilng all functions of articleController', () => {
     expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, mArticles);
     expect(mres.statusCode).toBe(mstatus);
     expect(mresdata).toEqual(mArticles);
+  });
+  test('Testing getUserArticles', async () => {
+    jest.spyOn(services, 'findUserArticles').mockReturnValue(mArticles[0]);
+    const mreq = httpMocks.createRequest({
+      params: {
+        id: mArticles[0].username,
+      },
+    });
+    const mres = httpMocks.createResponse();
+    const mnext = jest.fn();
+    const mstatus = 200;
+    await articleController.getUserArticles(mreq, mres, mnext);
+    const mresdata = mres._getJSONData();
+    expect(services.findUserArticles).toHaveBeenCalledTimes(1);
+    expect(services.findUserArticles).toHaveBeenCalledWith(mArticles[0].username);
+    expect(contentNegotiation.sendResponse).toHaveBeenCalledTimes(1);
+    expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, mArticles[0]);
+    expect(mres.statusCode).toBe(mstatus);
+    expect(mresdata).toEqual(mArticles[0]);
+  });
+  test('Testing getSearchedArticles', async () => {
+    jest.spyOn(services, 'findSearchedArticles').mockReturnValue(mArticles[0]);
+    const mreq = httpMocks.createRequest({
+      params: {
+        id: mArticles[0].title,
+      },
+    });
+    const mres = httpMocks.createResponse();
+    const mnext = jest.fn();
+    const mstatus = 200;
+    await articleController.getSearchedArticles(mreq, mres, mnext);
+    const mresdata = mres._getJSONData();
+    expect(services.findSearchedArticles).toHaveBeenCalledTimes(1);
+    expect(services.findSearchedArticles).toHaveBeenCalledWith(mArticles[0].title);
+    expect(contentNegotiation.sendResponse).toHaveBeenCalledTimes(1);
+    expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, mArticles[0]);
+    expect(mres.statusCode).toBe(mstatus);
+    expect(mresdata).toEqual(mArticles[0]);
   });
   test('Testing getArticle', async () => {
     jest.spyOn(services, 'findOneArticle').mockReturnValue(mArticles[0]);
@@ -83,6 +121,7 @@ describe('Testilng all functions of articleController', () => {
       },
       body: {
         title: mArticles[0].title,
+        description: mArticles[0].description,
       },
     });
     const mres = httpMocks.createResponse();
@@ -91,7 +130,7 @@ describe('Testilng all functions of articleController', () => {
     await articleController.patchArticle(mreq, mres, mnext);
     const mresdata = mres._getJSONData();
     expect(services.updateArticle).toHaveBeenCalledTimes(1);
-    expect(services.updateArticle).toHaveBeenCalledWith(mArticles[0].id, mArticles[0].title);
+    expect(services.updateArticle).toHaveBeenCalledWith(mArticles[0].id, mArticles[0].title, mArticles[0].description);
     expect(contentNegotiation.sendResponse).toHaveBeenCalledTimes(1);
     expect(contentNegotiation.sendResponse).toHaveBeenCalledWith(mreq, mres, 1);
     expect(mres.statusCode).toBe(mstatus);
