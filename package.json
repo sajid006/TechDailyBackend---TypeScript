@@ -22,8 +22,8 @@
     "x2js": "^3.4.3"
   },
   "scripts": {
-    "start": "node server.js",
-    "startproduction": "SET NODE_ENV=production & nodemon server.js",
+    "startproduction": "node server.js",
+    "start": "SET NODE_ENV=production & node server.js",
     "debug": "ndb server.js",
     "test": "jest",
     "testwatch": "jest --watchAll"
