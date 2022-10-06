@@ -4,7 +4,7 @@ const userRouter = require('./routes/userRoutes');
 const helmet = require('helmet');
 const AppError = require('./utils/appError');
 require('./config/winston');
-const globalErrorHandler = require('./utils/errorHandler');
+const errorHandler = require('./utils/errorHandler');
 const compression = require('compression');
 const dbConnect = require('./config/dbconnect');
 const cors = require('cors');
@@ -34,6 +34,6 @@ app.all('*', (req, res, next) => {
   next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));
 });
 
-app.use(globalErrorHandler);
+app.use(errorHandler);
 
 module.exports = app;
