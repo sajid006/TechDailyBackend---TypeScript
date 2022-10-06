@@ -2,7 +2,7 @@ const express = require('express');
 const storyRouter = require('./routes/storyRoutes');
 const userRouter = require('./routes/userRoutes');
 const helmet = require('helmet');
-const AppError = require('./utils/AppError');
+const AppError = require('./utils/appError');
 require('./config/winston');
 const globalErrorHandler = require('./utils/errorHandler').errorHandler;
 const compression = require('compression');
@@ -14,7 +14,7 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: '*',
+    origin: 'http://localhost:3001',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,
