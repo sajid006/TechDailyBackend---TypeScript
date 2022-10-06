@@ -1,68 +1,61 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <title>Code coverage report for services/articleServices.js</title>
+  <head>
+    <title>Code coverage report for services/storyServices.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
     <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style type='text/css'>
-        .coverage-summary .sorter {
-            background-image: url(../sort-arrow-sprite.png);
-        }
+    <style type="text/css">
+      .coverage-summary .sorter {
+        background-image: url(../sort-arrow-sprite.png);
+      }
     </style>
-</head>
-    
-<body>
-<div class='wrapper'>
-    <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">services</a> articleServices.js</h1>
-        <div class='clearfix'>
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Statements</span>
-                <span class='fraction'>31/31</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Functions</span>
-                <span class='fraction'>8/8</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Lines</span>
-                <span class='fraction'>30/30</span>
-            </div>
-        
-            
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="pad1">
+        <h1><a href="../index.html">All files</a> / <a href="index.html">services</a> storyServices.js</h1>
+        <div class="clearfix">
+          <div class="fl pad1y space-right2">
+            <span class="strong">100% </span>
+            <span class="quiet">Statements</span>
+            <span class="fraction">31/31</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">100% </span>
+            <span class="quiet">Branches</span>
+            <span class="fraction">2/2</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">100% </span>
+            <span class="quiet">Functions</span>
+            <span class="fraction">8/8</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">100% </span>
+            <span class="quiet">Lines</span>
+            <span class="fraction">30/30</span>
+          </div>
         </div>
         <p class="quiet">
-            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+          Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the
+          previous block.
         </p>
         <template id="filterTemplate">
-            <div class="quiet">
-                Filter:
-                <input oninput="onInput()" type="search" id="fileSearch">
-            </div>
+          <div class="quiet">
+            Filter:
+            <input oninput="onInput()" type="search" id="fileSearch" />
+          </div>
         </template>
-    </div>
-    <div class='status-line high'></div>
-    <pre><table class="coverage">
+      </div>
+      <div class="status-line high"></div>
+      <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
 <a name='L3'></a><a href='#L3'>3</a>
@@ -263,37 +256,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const articleModel = require('../models/articleModel');
-const articles = articleModel.articles;
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const storyModel = require('../models/storyModel');
+const stories = storyModel.stories;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 &nbsp;
 exports.validateID = async (value) =&gt; {
-  const validarticle = await articles.findOne({
+  const validstory = await stories.findOne({
     where: {
       id: value,
     },
   });
-  if (validarticle) return 1;
+  if (validstory) return 1;
   else return 0;
 };
 &nbsp;
-exports.findAllArticles = async () =&gt; {
-  const articlesList = await articles.findAll();
-  return articlesList;
+exports.findAllStories = async () =&gt; {
+  const storiesList = await stories.findAll();
+  return storiesList;
 };
 &nbsp;
-exports.findUserArticles = async (id) =&gt; {
-  const articleList = await articles.findAll({
+exports.findUserStories = async (id) =&gt; {
+  const storyList = await stories.findAll({
     where: {
       username: id,
     },
   });
-  return articleList;
+  return storyList;
 };
 &nbsp;
-exports.findSearchedArticles = async (id) =&gt; {
-  const articleList = await articles.findAll({
+exports.findSearchedStories = async (id) =&gt; {
+  const storyList = await stories.findAll({
     where: {
       [Op.or]: [
         {
@@ -309,26 +302,26 @@ exports.findSearchedArticles = async (id) =&gt; {
       ],
     },
   });
-  return articleList;
+  return storyList;
 };
 &nbsp;
-exports.findOneArticle = async (id) =&gt; {
-  const article = await articles.findOne({
+exports.findOneStory = async (id) =&gt; {
+  const story = await stories.findOne({
     where: {
       id,
     },
   });
-  return article;
+  return story;
 };
 &nbsp;
-exports.createArticle = async (articleData) =&gt; {
-  const { username, title, description, rating } = articleData;
-  const newArticle = await articles.create({ username, title, description, rating });
-  return newArticle;
+exports.createStory = async (storyData) =&gt; {
+  const { username, title, description, rating } = storyData;
+  const newStory = await stories.create({ username, title, description, rating });
+  return newStory;
 };
 &nbsp;
-exports.updateArticle = async (id, title, description) =&gt; {
-  const myArticle = await articles.update(
+exports.updateStory = async (id, title, description) =&gt; {
+  const myStory = await stories.update(
     {
       title,
       description,
@@ -339,11 +332,11 @@ exports.updateArticle = async (id, title, description) =&gt; {
       },
     }
   );
-  return myArticle;
+  return myStory;
 };
 &nbsp;
-exports.removeArticle = async (id) =&gt; {
-  const deleted = articles.destroy({
+exports.removeStory = async (id) =&gt; {
+  const deleted = stories.destroy({
     where: {
       id,
     },
@@ -365,21 +358,22 @@ exports.removeArticle = async (id) =&gt; {
 // ],
 &nbsp;</pre></td></tr></table></pre>
 
-                <div class='push'></div><!-- for sticky footer -->
-            </div><!-- /wrapper -->
-            <div class='footer quiet pad2 space-top1 center small'>
-                Code coverage generated by
-                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Aug 31 2022 17:27:55 GMT+0600 (Bangladesh Standard Time)
-            </div>
-        <script src="../prettify.js"></script>
-        <script>
-            window.onload = function () {
-                prettyPrint();
-            };
-        </script>
-        <script src="../sorter.js"></script>
-        <script src="../block-navigation.js"></script>
-    </body>
+      <div class="push"></div>
+      <!-- for sticky footer -->
+    </div>
+    <!-- /wrapper -->
+    <div class="footer quiet pad2 space-top1 center small">
+      Code coverage generated by
+      <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+      at Wed Aug 31 2022 17:27:55 GMT+0600 (Bangladesh Standard Time)
+    </div>
+    <script src="../prettify.js"></script>
+    <script>
+      window.onload = function () {
+        prettyPrint();
+      };
+    </script>
+    <script src="../sorter.js"></script>
+    <script src="../block-navigation.js"></script>
+  </body>
 </html>
-    

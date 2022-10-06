@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
-const articleModel = require('../models/articleModel');
+const storyModel = require('../models/storyModel');
 const bcrypt = require('bcrypt');
 const AppError = require('./appError');
 const catchAsync = require('./catchAsync');
 const contentNegotiation = require('./contentNegotiation');
 const users = userModel.users;
-const articles = articleModel.articles;
+const stories = storyModel.stories;
 
 const generateToken = (username) => {
   return jwt.sign(
@@ -61,7 +61,7 @@ const checkTokenUser = catchAsync(async (req, res, next) => {
   next();
 });
 
-const checkTokenArticle = catchAsync(async (req, res, next) => {
+const checkTokenStory = catchAsync(async (req, res, next) => {
   const usernameFromToken = decodeToken(req, res);
   if (!usernameFromToken) {
     return next(new AppError('Your token does not contain any user', 401));
@@ -77,13 +77,13 @@ const checkTokenArticle = catchAsync(async (req, res, next) => {
   // check if the user is the same as the one trying to update/delete the user
 
   let usernameFromReq;
-  if (!req.body.username && !req.params.id) return next(new AppError('Please provide a username or article id', 401));
+  if (!req.body.username && !req.params.id) return next(new AppError('Please provide a username or story id', 401));
   if (req.body.username) usernameFromReq = req.body.username;
   else {
-    const article = await articles.findOne({
+    const story = await stories.findOne({
       where: { id: req.params.id },
     });
-    usernameFromReq = article.username;
+    usernameFromReq = story.username;
   }
   if (usernameFromReq !== usernameFromToken) {
     return next(new AppError('You are not authorized', 401));
@@ -114,7 +114,7 @@ const validatetUser = catchAsync(async (req, res, next) => {
 module.exports = {
   generateToken,
   checkTokenUser,
-  checkTokenArticle,
+  checkTokenStory,
   validatetUser,
   verifyToken,
   logoutUser,

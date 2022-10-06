@@ -2,7 +2,7 @@ const sequelize = require('./connection');
 const { Deferrable } = require('sequelize');
 const users = require('./userModel').users;
 const Sequelize = require('sequelize');
-const articles = sequelize.define('articles', {
+const stories = sequelize.define('stories', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -34,4 +34,4 @@ const articles = sequelize.define('articles', {
   },
 });
 
-module.exports = { articles };
+module.exports = { stories };

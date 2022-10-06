@@ -1,4 +1,4 @@
-const mArticles = [
+const mStories = [
   {
     id: 1,
     username: 'sajid1',
@@ -19,4 +19,4 @@ const mArticles = [
   },
 ];
 
-module.exports = mArticles;
+module.exports = mStories;

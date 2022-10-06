@@ -1,14 +1,14 @@
 const httpMocks = require('node-mocks-http');
 const userModel = require('../../models/userModel');
-const articleModel = require('../../models/articleModel');
+const storyModel = require('../../models/storyModel');
 const contentNegotiation = require('../../utils/contentNegotiation');
 const AppError = require('../../utils/appError');
 const users = userModel.users;
-const articles = articleModel.articles;
+const stories = storyModel.stories;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const validation = require('../../utils/validation');
-const mArticles = require('../mockData/mArticles');
+const mStories = require('../mockData/mStories');
 const mUsers = require('../mockData/mUsers');
 const wrongToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IopXVCJ9.eyJwYXNzd29yZCI6InNhamlkMSIsImlhdCI6MTY1NTk4NDU1MywiZXhwIjoxNjU2NDE2NTUzfQ.ytEnomDCnz5PvszZxjBQWDTsc6xTUDYzuOtR-NCNips';
@@ -69,7 +69,7 @@ describe('Testing only verifyToken', () => {
     });
     const mnext = jest.fn();
     const verify = await validation.verifyToken(mreq, mres, mnext);
-    expect(verify).toEqual(mArticles[0].username);
+    expect(verify).toEqual(mStories[0].username);
   });
 });
 describe('Testing only logOutUser', () => {
@@ -209,7 +209,7 @@ describe('Testing all cases of checkTokenUser', () => {
   });
 });
 
-describe('Testing all cases of checkTokenArticle', () => {
+describe('Testing all cases of checkTokenStory', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -223,7 +223,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
     const mError = new AppError('Your token does not contain any user', 401);
-    await validation.checkTokenArticle(mreq, mres, mnext);
+    await validation.checkTokenStory(mreq, mres, mnext);
     expect(mnext).toHaveBeenCalledTimes(1);
     expect(mnext).toHaveBeenCalledWith(mError);
     expect(users.findOne).toHaveBeenCalledTimes(0);
@@ -239,7 +239,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
     const mError = new AppError('The user for this token does not exist', 401);
-    await validation.checkTokenArticle(mreq, mres, mnext);
+    await validation.checkTokenStory(mreq, mres, mnext);
     expect(users.findOne).toHaveBeenCalledTimes(1);
     expect(users.findOne).toHaveBeenCalledWith({
       where: { username: mUsers[0].username },
@@ -257,8 +257,8 @@ describe('Testing all cases of checkTokenArticle', () => {
     });
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
-    const mError = new AppError('Please provide a username or article id', 401);
-    await validation.checkTokenArticle(mreq, mres, mnext);
+    const mError = new AppError('Please provide a username or story id', 401);
+    await validation.checkTokenStory(mreq, mres, mnext);
     expect(users.findOne).toHaveBeenCalledTimes(1);
     expect(users.findOne).toHaveBeenCalledWith({
       where: { username: mUsers[0].username },
@@ -279,7 +279,7 @@ describe('Testing all cases of checkTokenArticle', () => {
     });
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
-    await validation.checkTokenArticle(mreq, mres, mnext);
+    await validation.checkTokenStory(mreq, mres, mnext);
     expect(users.findOne).toHaveBeenCalledTimes(1);
     expect(users.findOne).toHaveBeenCalledWith({
       where: { username: mUsers[0].username },
@@ -290,26 +290,26 @@ describe('Testing all cases of checkTokenArticle', () => {
   });
   test('Testing fifth if', async () => {
     jest.spyOn(users, 'findOne').mockReturnValue(mUsers[0]);
-    jest.spyOn(articles, 'findOne').mockReturnValue(mArticles[1]);
+    jest.spyOn(stories, 'findOne').mockReturnValue(mStories[1]);
     const mreq = httpMocks.createRequest({
       headers: {
         cookie: `user=${token}`,
       },
       params: {
-        id: mArticles[0].id,
+        id: mStories[0].id,
       },
     });
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
     const mError = new AppError('You are not authorized', 401);
-    await validation.checkTokenArticle(mreq, mres, mnext);
+    await validation.checkTokenStory(mreq, mres, mnext);
     expect(users.findOne).toHaveBeenCalledTimes(1);
     expect(users.findOne).toHaveBeenCalledWith({
       where: { username: mUsers[0].username },
     });
-    expect(articles.findOne).toHaveBeenCalledTimes(1);
-    expect(articles.findOne).toHaveBeenCalledWith({
-      where: { id: mArticles[0].id },
+    expect(stories.findOne).toHaveBeenCalledTimes(1);
+    expect(stories.findOne).toHaveBeenCalledWith({
+      where: { id: mStories[0].id },
     });
     expect(mnext).toHaveBeenCalledTimes(1);
     expect(mnext).toHaveBeenCalledWith(mError);
@@ -317,10 +317,10 @@ describe('Testing all cases of checkTokenArticle', () => {
   });
   test('Testing no error', async () => {
     jest.spyOn(users, 'findOne').mockReturnValue(mUsers[0]);
-    jest.spyOn(articles, 'findOne').mockReturnValue(mArticles[0]);
+    jest.spyOn(stories, 'findOne').mockReturnValue(mStories[0]);
     const mreq = httpMocks.createRequest({
       params: {
-        id: mArticles[0].id,
+        id: mStories[0].id,
       },
       headers: {
         cookie: `user=${token}`,
@@ -328,14 +328,14 @@ describe('Testing all cases of checkTokenArticle', () => {
     });
     const mres = httpMocks.createResponse();
     const mnext = jest.fn();
-    await validation.checkTokenArticle(mreq, mres, mnext);
+    await validation.checkTokenStory(mreq, mres, mnext);
     expect(users.findOne).toHaveBeenCalledTimes(1);
     expect(users.findOne).toHaveBeenCalledWith({
       where: { username: mUsers[0].username },
     });
-    expect(articles.findOne).toHaveBeenCalledTimes(1);
-    expect(articles.findOne).toHaveBeenCalledWith({
-      where: { id: mArticles[0].id },
+    expect(stories.findOne).toHaveBeenCalledTimes(1);
+    expect(stories.findOne).toHaveBeenCalledWith({
+      where: { id: mStories[0].id },
     });
     expect(mreq.username).toBe(mUsers[0].username);
     expect(mnext).toHaveBeenCalledTimes(1);

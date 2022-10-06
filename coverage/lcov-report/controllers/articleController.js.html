@@ -1,68 +1,61 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <title>Code coverage report for controllers/articleController.js</title>
+  <head>
+    <title>Code coverage report for controllers/storyController.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
     <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style type='text/css'>
-        .coverage-summary .sorter {
-            background-image: url(../sort-arrow-sprite.png);
-        }
+    <style type="text/css">
+      .coverage-summary .sorter {
+        background-image: url(../sort-arrow-sprite.png);
+      }
     </style>
-</head>
-    
-<body>
-<div class='wrapper'>
-    <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">controllers</a> articleController.js</h1>
-        <div class='clearfix'>
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Statements</span>
-                <span class='fraction'>32/32</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Functions</span>
-                <span class='fraction'>7/7</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Lines</span>
-                <span class='fraction'>32/32</span>
-            </div>
-        
-            
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="pad1">
+        <h1><a href="../index.html">All files</a> / <a href="index.html">controllers</a> storyController.js</h1>
+        <div class="clearfix">
+          <div class="fl pad1y space-right2">
+            <span class="strong">100% </span>
+            <span class="quiet">Statements</span>
+            <span class="fraction">32/32</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">100% </span>
+            <span class="quiet">Branches</span>
+            <span class="fraction">0/0</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">100% </span>
+            <span class="quiet">Functions</span>
+            <span class="fraction">7/7</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">100% </span>
+            <span class="quiet">Lines</span>
+            <span class="fraction">32/32</span>
+          </div>
         </div>
         <p class="quiet">
-            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+          Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the
+          previous block.
         </p>
         <template id="filterTemplate">
-            <div class="quiet">
-                Filter:
-                <input oninput="onInput()" type="search" id="fileSearch">
-            </div>
+          <div class="quiet">
+            Filter:
+            <input oninput="onInput()" type="search" id="fileSearch" />
+          </div>
         </template>
-    </div>
-    <div class='status-line high'></div>
-    <pre><table class="coverage">
+      </div>
+      <div class="status-line high"></div>
+      <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
 <a name='L3'></a><a href='#L3'>3</a>
@@ -165,74 +158,75 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const services = require('../services/articleServices');
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const services = require('../services/storyServices');
 const catchAsync = require('../utils/catchAsync');
 const contentNegotiation = require('../utils/contentNegotiation');
 &nbsp;
-exports.getAllArticles = catchAsync(async (req, res, next) =&gt; {
-  const allArticles = await services.findAllArticles();
-  contentNegotiation.sendResponse(req, res, allArticles);
+exports.getAllStories = catchAsync(async (req, res, next) =&gt; {
+  const allStories = await services.findAllStories();
+  contentNegotiation.sendResponse(req, res, allStories);
 });
 &nbsp;
-exports.getUserArticles = catchAsync(async (req, res, next) =&gt; {
+exports.getUserStories = catchAsync(async (req, res, next) =&gt; {
   const id = req.params.id;
-  const userArticles = await services.findUserArticles(id);
-  contentNegotiation.sendResponse(req, res, userArticles);
+  const userStories = await services.findUserStories(id);
+  contentNegotiation.sendResponse(req, res, userStories);
 });
 &nbsp;
-exports.getSearchedArticles = catchAsync(async (req, res, next) =&gt; {
+exports.getSearchedStories = catchAsync(async (req, res, next) =&gt; {
   const id = req.params.id;
-  const userArticles = await services.findSearchedArticles(id);
-  contentNegotiation.sendResponse(req, res, userArticles);
+  const userStories = await services.findSearchedStories(id);
+  contentNegotiation.sendResponse(req, res, userStories);
 });
 &nbsp;
-exports.getArticle = catchAsync(async (req, res, next) =&gt; {
+exports.getStory = catchAsync(async (req, res, next) =&gt; {
   const id = req.params.id * 1;
-  const myArticle = await services.findOneArticle(id);
-  contentNegotiation.sendResponse(req, res, myArticle);
+  const myStory = await services.findOneStory(id);
+  contentNegotiation.sendResponse(req, res, myStory);
 });
 &nbsp;
-exports.postArticle = catchAsync(async (req, res, next) =&gt; {
-  const articleData = {
+exports.postStory = catchAsync(async (req, res, next) =&gt; {
+  const storyData = {
     username: req.body.username,
     title: req.body.title,
     description: req.body.description,
     rating: req.body.rating,
   };
-  const newArticle = await services.createArticle(articleData);
-  contentNegotiation.sendResponse(req, res, newArticle, 201);
+  const newStory = await services.createStory(storyData);
+  contentNegotiation.sendResponse(req, res, newStory, 201);
 });
 &nbsp;
-exports.patchArticle = catchAsync(async (req, res, next) =&gt; {
+exports.patchStory = catchAsync(async (req, res, next) =&gt; {
   const title = req.body.title;
   const id = req.params.id;
   const description = req.body.description;
-  const myArticle = await services.updateArticle(id, title, description);
-  contentNegotiation.sendResponse(req, res, myArticle);
+  const myStory = await services.updateStory(id, title, description);
+  contentNegotiation.sendResponse(req, res, myStory);
 });
 &nbsp;
-exports.deleteArticle = catchAsync(async (req, res, next) =&gt; {
+exports.deleteStory = catchAsync(async (req, res, next) =&gt; {
   const id = req.params.id;
-  await services.removeArticle(id);
+  await services.removeStory(id);
   res.status(204).json({});
 });
 &nbsp;</pre></td></tr></table></pre>
 
-                <div class='push'></div><!-- for sticky footer -->
-            </div><!-- /wrapper -->
-            <div class='footer quiet pad2 space-top1 center small'>
-                Code coverage generated by
-                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Aug 31 2022 17:27:55 GMT+0600 (Bangladesh Standard Time)
-            </div>
-        <script src="../prettify.js"></script>
-        <script>
-            window.onload = function () {
-                prettyPrint();
-            };
-        </script>
-        <script src="../sorter.js"></script>
-        <script src="../block-navigation.js"></script>
-    </body>
+      <div class="push"></div>
+      <!-- for sticky footer -->
+    </div>
+    <!-- /wrapper -->
+    <div class="footer quiet pad2 space-top1 center small">
+      Code coverage generated by
+      <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+      at Wed Aug 31 2022 17:27:55 GMT+0600 (Bangladesh Standard Time)
+    </div>
+    <script src="../prettify.js"></script>
+    <script>
+      window.onload = function () {
+        prettyPrint();
+      };
+    </script>
+    <script src="../sorter.js"></script>
+    <script src="../block-navigation.js"></script>
+  </body>
 </html>
-    

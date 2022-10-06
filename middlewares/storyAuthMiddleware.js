@@ -1,10 +1,10 @@
-const services = require('../services/articleServices');
+const services = require('../services/storyServices');
 const catchAsync = require('../utils/catchAsync');
 
 exports.checkID = catchAsync(async (req, res, next) => {
   const value = req.params.id;
-  const noOfArticle = await services.validateID(value);
-  if (noOfArticle < 1) {
+  const noOfStory = await services.validateID(value);
+  if (noOfStory < 1) {
     return res.status(404).json({
       status: 'fail',
       message: 'Invalid Id',

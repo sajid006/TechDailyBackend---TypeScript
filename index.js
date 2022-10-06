@@ -1,5 +1,5 @@
 const express = require('express');
-const articleRouter = require('./routes/articleRoutes');
+const storyRouter = require('./routes/storyRoutes');
 const userRouter = require('./routes/userRoutes');
 const helmet = require('helmet');
 const AppError = require('./utils/AppError');
@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(cookieParser());
 dbConnect();
 
-app.use('/api/v1/articles', articleRouter);
+app.use('/api/v1/stories', storyRouter);
 app.use('/api/v1/users', userRouter);
 
 app.all('*', (req, res, next) => {

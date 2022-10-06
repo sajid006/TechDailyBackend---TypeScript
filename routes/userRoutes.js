@@ -2,7 +2,7 @@ const express = require('express');
 const userController = require('../controllers/userController');
 const validation = require('../utils/validation');
 const userAuthMiddleware = require('../middlewares/userAuthMiddleware');
-const articleController = require('../controllers/articleController');
+const storyController = require('../controllers/storyController');
 
 const router = express.Router();
 
@@ -21,6 +21,6 @@ router
   .delete(validation.checkTokenUser, userAuthMiddleware.checkUsername, userController.deleteUser);
 
 router.route('/login').post(validation.validatetUser);
-router.route('/:id/articles').get(userAuthMiddleware.checkUsername, articleController.getUserArticles);
+router.route('/:id/stories').get(userAuthMiddleware.checkUsername, storyController.getUserStories);
 
 module.exports = router;
