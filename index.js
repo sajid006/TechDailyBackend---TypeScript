@@ -4,7 +4,7 @@ const userRouter = require('./routes/userRoutes');
 const helmet = require('helmet');
 const AppError = require('./utils/appError');
 require('./config/winston');
-const globalErrorHandler = require('./utils/errorHandler').errorHandler;
+const globalErrorHandler = require('./utils/errorHandler');
 const compression = require('compression');
 const dbConnect = require('./config/dbconnect');
 const cors = require('cors');
