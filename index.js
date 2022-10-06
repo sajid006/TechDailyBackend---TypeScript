@@ -3,12 +3,12 @@ const storyRouter = require('./routes/storyRoutes');
 const userRouter = require('./routes/userRoutes');
 const helmet = require('helmet');
 const AppError = require('./utils/appError');
-require('./config/winston');
-const errorHandler = require('./utils/errorHandler');
+const errorHandler = require('./utils/errorHandler').default;
 const compression = require('compression');
 const dbConnect = require('./config/dbconnect');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+require('./config/winston');
 const app = express();
 
 app.use(helmet());
