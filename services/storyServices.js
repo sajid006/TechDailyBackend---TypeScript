@@ -4,12 +4,12 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 exports.validateID = async (value) => {
-  const validstory = await stories.findOne({
+  const validstory = await stories.findAll({
     where: {
       id: value,
     },
   });
-  if (validstory) return 1;
+  if (validstory.length > 0) return 1;
   else return 0;
 };
 
@@ -48,12 +48,12 @@ exports.findSearchedStories = async (id) => {
 };
 
 exports.findOneStory = async (id) => {
-  const story = await stories.findOne({
+  const story = await stories.findAll({
     where: {
       id,
     },
   });
-  return story;
+  return story[0];
 };
 
 exports.createStory = async (storyData) => {

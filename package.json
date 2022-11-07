@@ -16,14 +16,16 @@
     "json-to-html": "^0.1.2",
     "json-to-plain-text": "^1.0.3",
     "jsonwebtoken": "^8.5.1",
+    "mssql": "^9.0.1",
     "mysql2": "^2.3.3",
+    "nodemon": "^2.0.20",
     "sequelize": "^6.20.1",
     "winston": "^3.7.2",
     "x2js": "^3.4.3"
   },
   "scripts": {
-    "start": "node server.js",
-    "startproduction": "SET NODE_ENV=production & node server.js",
+    "start": "nodemon server.js",
+    "startproduction": "SET NODE_ENV=production & nodemon server.js",
     "debug": "ndb server.js",
     "test": "jest",
     "testwatch": "jest --watchAll"

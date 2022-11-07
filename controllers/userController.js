@@ -11,6 +11,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const id = req.params.id;
+  console.log(id);
   const myUser = await services.findOneUser(id);
   contentNegotiation.sendResponse(req, res, myUser);
 });
@@ -22,9 +23,10 @@ exports.postUser = catchAsync(async (req, res, next) => {
   userData.password = await bcrypt.hash(req.body.password, 10);
   userData.username = req.body.username;
   const newUser = await services.createUser(userData);
-  const accessToken = validation.generateToken(newUser.username);
-  res.cookie('user', accessToken, { httpOnly: true });
-  contentNegotiation.sendResponse(req, res, newUser, 201);
+  const token = validation.generateToken(newUser.username);
+  //res.cookie('user', accessToken, { httpOnly: true });
+  const userWithToken = { ...newUser.dataValues, token };
+  contentNegotiation.sendResponse(req, res, userWithToken, 201);
 });
 
 exports.patchUser = catchAsync(async (req, res, next) => {

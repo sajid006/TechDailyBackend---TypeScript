@@ -15,7 +15,7 @@ const generateToken = (username) => {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: process.env.JWT_EXPIRATION_TIME,
+      expiresIn: '50d',
     }
   );
 };
@@ -23,21 +23,27 @@ const generateToken = (username) => {
 const decodeToken = (req, res) => {
   // check if authorization token is available
   let token;
-  if (req.headers.cookie) {
-    token = req.headers.cookie.split('=')[1];
+  console.log(req.headers);
+  console.log(req.headers.authorization);
+  if (req.headers.authorization) {
+    token = req.headers.authorization.split(' ')[1];
   } else {
-    return undefined;
+    return '';
   }
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  return decoded.username;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded.username;
+  } catch {
+    return '';
+  }
 };
 const verifyToken = (req, res, next) => {
   const username = decodeToken(req, res);
   return res.send(username);
 };
 const logoutUser = (req, res, next) => {
-  res.cookie('user', '', { httpOnly: true, maxAge: 0 });
-  return res.send();
+  //res.cookie('user', '', { httpOnly: true, maxAge: 0 });
+  return res.send('');
 };
 const checkTokenUser = catchAsync(async (req, res, next) => {
   const usernameFromToken = decodeToken(req, res);
@@ -45,10 +51,10 @@ const checkTokenUser = catchAsync(async (req, res, next) => {
     return next(new AppError('Your token does not contain any user', 401));
   }
   // check if the user is available
-  const userFromToken = await users.findOne({
+  const userFromToken = await users.findAll({
     where: { username: usernameFromToken },
   });
-  if (!userFromToken) {
+  if (userFromToken.length == 0) {
     return next(new AppError('The user for this token does not exist', 401));
   }
 
@@ -67,10 +73,10 @@ const checkTokenStory = catchAsync(async (req, res, next) => {
     return next(new AppError('Your token does not contain any user', 401));
   }
   // check if the user is available
-  const userFromToken = await users.findOne({
+  const userFromToken = await users.findAll({
     where: { username: usernameFromToken },
   });
-  if (!userFromToken) {
+  if (userFromToken.length == 0) {
     return next(new AppError('The user for this token does not exist', 401));
   }
 
@@ -80,9 +86,10 @@ const checkTokenStory = catchAsync(async (req, res, next) => {
   if (!req.body.username && !req.params.id) return next(new AppError('Please provide a username or story id', 401));
   if (req.body.username) usernameFromReq = req.body.username;
   else {
-    const story = await stories.findOne({
+    const storyList = await stories.findAll({
       where: { id: req.params.id },
     });
+    const story = storyList[0];
     usernameFromReq = story.username;
   }
   if (usernameFromReq !== usernameFromToken) {
@@ -99,15 +106,17 @@ const validatetUser = catchAsync(async (req, res, next) => {
   if (!username || !password) {
     return next(new AppError('Please provide username and password', 400));
   }
-  const user = await users.findOne({
+  console.log(username);
+  const userList = await users.findAll({
     where: { username },
   });
-  if (!user) return next(new AppError('Authentication failed', 401));
+  if (userList.length == 0) return next(new AppError('Authentication failed', 401));
+  const user = userList[0];
   const isValidPassword = await bcrypt.compare(password, user.password);
   if (!isValidPassword) return next(new AppError('Authentication faileddd', 401));
   const token = generateToken(user.username);
-  const messageWithUsername = { message: 'Login Successfull', username: username };
-  res.cookie('user', token, { httpOnly: true });
+  const messageWithUsername = { message: 'Login Successfull', username: username, token: token };
+  //res.cookie('user', token, { httpOnly: true });
   contentNegotiation.sendResponse(req, res, messageWithUsername, 201);
 });
 

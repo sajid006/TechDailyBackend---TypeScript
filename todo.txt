@@ -1,3 +1,35 @@
 create a route to get all stories of a user 
 write 9 extra functions to test validation fully.
 write test for appError, catchasync, errorhandler, dbconfig
+
+
+
+/*
+version: '3.9'
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+
+  api:
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      HOST: mysql
+      PORT: 3306
+      USERNAME: root
+      PASSWORD: password
+      JWT_SECRET: xiaomi-redmi-note-ten-pro-max-ultra%
+      JWT_EXPIRATION_TIME: 50d
+    depends_on:
+      - mysql
+
+volumes:
+  mysql: {}
+*/

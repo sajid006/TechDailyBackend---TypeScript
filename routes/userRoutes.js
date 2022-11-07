@@ -6,7 +6,7 @@ const storyController = require('../controllers/storyController');
 
 const router = express.Router();
 
-router.route('/').get(userController.getAllUsers).post(userAuthMiddleware.checkBody, userController.postUser);
+router.route('/').get(userController.getAllUsers).post(userAuthMiddleware.checkPostBody, userController.postUser);
 router.route('/verifyToken').post(validation.verifyToken);
 router.route('/logout').get(validation.logoutUser);
 router
@@ -15,7 +15,7 @@ router
   .patch(
     validation.checkTokenUser,
     userAuthMiddleware.checkUsername,
-    userAuthMiddleware.checkBody,
+    userAuthMiddleware.checkUpdateBody,
     userController.patchUser
   )
   .delete(validation.checkTokenUser, userAuthMiddleware.checkUsername, userController.deleteUser);

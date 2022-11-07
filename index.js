@@ -3,18 +3,18 @@ const storyRouter = require('./routes/storyRoutes');
 const userRouter = require('./routes/userRoutes');
 const helmet = require('helmet');
 const AppError = require('./utils/appError');
-const errorHandler = require('./utils/errorHandler').default;
+require('./config/winston');
+const globalErrorHandler = require('./utils/errorHandler').errorHandler;
 const compression = require('compression');
 const dbConnect = require('./config/dbconnect');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-require('./config/winston');
 const app = express();
 
 app.use(helmet());
 app.use(
   cors({
-    origin: '*',
+    origin: ['https://techdaily2022.netlify.app', 'http://localhost:3001', 'https://techdaily2023.netlify.app'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,
@@ -34,6 +34,6 @@ app.all('*', (req, res, next) => {
   next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));
 });
 
-app.use(errorHandler);
+app.use(globalErrorHandler);
 
 module.exports = app;

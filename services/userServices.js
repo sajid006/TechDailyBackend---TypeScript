@@ -2,12 +2,14 @@ const userModel = require('../models/userModel');
 const users = userModel.users;
 
 exports.validateUser = async (username) => {
-  const validUsers = await users.findOne({
+  console.log(username);
+  const validUsers = await users.findAll({
     where: {
       username,
     },
   });
-  if (validUsers) return 1;
+  console.log(validUsers);
+  if (validUsers.length > 0) return 1;
   else return 0;
 };
 
@@ -17,13 +19,13 @@ exports.findAllUsers = async () => {
 };
 
 exports.findOneUser = async (username) => {
-  const user = await users.findOne({
+  const user = await users.findAll({
     where: {
       username: username,
     },
   });
 
-  return user;
+  return user[0];
 };
 
 exports.createUser = async (userData) => {

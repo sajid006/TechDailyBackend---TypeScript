@@ -14,11 +14,45 @@ exports.checkUsername = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.checkBody = (req, res, next) => {
+exports.checkUpdateBody = (req, res, next) => {
   if (!req.body.email || !req.body.name) {
     return res.status(400).json({
       status: 'fail',
       message: 'name or email missing',
+    });
+  }
+  next();
+};
+
+exports.checkPostBody = (req, res, next) => {
+  if (!req.body.username) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Username missing',
+    });
+  }
+  if (!req.body.name) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Name missing',
+    });
+  }
+  if (!req.body.email) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Email missing',
+    });
+  }
+  if (!req.body.password) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Password missing',
+    });
+  }
+  if (req.body.password.length < 8) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Password length must be at least 8',
     });
   }
   next();
