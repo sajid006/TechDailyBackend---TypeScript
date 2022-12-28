@@ -162,30 +162,30 @@
 const catchAsync = require('../utils/catchAsync');
 const contentNegotiation = require('../utils/contentNegotiation');
 &nbsp;
-exports.getAllStories = catchAsync(async (req, res, next) =&gt; {
+exports.getAllStories = catchAsync(async (req: Request, res: Response, next: NextFunction) =&gt; {
   const allStories = await services.findAllStories();
   contentNegotiation.sendResponse(req, res, allStories);
 });
 &nbsp;
-exports.getUserStories = catchAsync(async (req, res, next) =&gt; {
+exports.getUserStories = catchAsync(async (req: Request, res: Response, next: NextFunction) =&gt; {
   const id = req.params.id;
   const userStories = await services.findUserStories(id);
   contentNegotiation.sendResponse(req, res, userStories);
 });
 &nbsp;
-exports.getSearchedStories = catchAsync(async (req, res, next) =&gt; {
+exports.getSearchedStories = catchAsync(async (req: Request, res: Response, next: NextFunction) =&gt; {
   const id = req.params.id;
   const userStories = await services.findSearchedStories(id);
   contentNegotiation.sendResponse(req, res, userStories);
 });
 &nbsp;
-exports.getStory = catchAsync(async (req, res, next) =&gt; {
+exports.getStory = catchAsync(async (req: Request, res: Response, next: NextFunction) =&gt; {
   const id = req.params.id * 1;
   const myStory = await services.findOneStory(id);
   contentNegotiation.sendResponse(req, res, myStory);
 });
 &nbsp;
-exports.postStory = catchAsync(async (req, res, next) =&gt; {
+exports.postStory = catchAsync(async (req: Request, res: Response, next: NextFunction) =&gt; {
   const storyData = {
     username: req.body.username,
     title: req.body.title,
@@ -196,7 +196,7 @@ exports.postStory = catchAsync(async (req, res, next) =&gt; {
   contentNegotiation.sendResponse(req, res, newStory, 201);
 });
 &nbsp;
-exports.patchStory = catchAsync(async (req, res, next) =&gt; {
+exports.patchStory = catchAsync(async (req: Request, res: Response, next: NextFunction) =&gt; {
   const title = req.body.title;
   const id = req.params.id;
   const description = req.body.description;
@@ -204,7 +204,7 @@ exports.patchStory = catchAsync(async (req, res, next) =&gt; {
   contentNegotiation.sendResponse(req, res, myStory);
 });
 &nbsp;
-exports.deleteStory = catchAsync(async (req, res, next) =&gt; {
+exports.deleteStory = catchAsync(async (req: Request, res: Response, next: NextFunction) =&gt; {
   const id = req.params.id;
   await services.removeStory(id);
   res.status(204).json({});

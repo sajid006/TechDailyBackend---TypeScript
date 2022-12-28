@@ -1,26 +1,24 @@
-const jwt = require('jsonwebtoken');
-const userModel = require('../models/userModel');
-const storyModel = require('../models/storyModel');
-const bcrypt = require('bcrypt');
-const AppError = require('./appError');
-const catchAsync = require('./catchAsync');
-const contentNegotiation = require('./contentNegotiation');
-const users = userModel.users;
-const stories = storyModel.stories;
-
-const generateToken = (username) => {
+import * as bcrypt from 'bcrypt';
+import { NextFunction, Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
+import stories from '../models/storyModel';
+import users from '../models/userModel';
+import AppError from './appError';
+import catchAsync from './catchAsync';
+import sendResponse from './contentNegotiation';
+const generateToken = (username: any) => {
   return jwt.sign(
     {
       username,
     },
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET as string,
     {
       expiresIn: '50d',
     }
   );
 };
 
-const decodeToken = (req, res) => {
+const decodeToken = (req: Request, res: Response) => {
   // check if authorization token is available
   let token;
   console.log(req.headers);
@@ -31,21 +29,21 @@ const decodeToken = (req, res) => {
     return '';
   }
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
     return decoded.username;
   } catch {
     return '';
   }
 };
-const verifyToken = (req, res, next) => {
+const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   const username = decodeToken(req, res);
   return res.send(username);
 };
-const logoutUser = (req, res, next) => {
+const logoutUser = (req: Request, res: Response, next: NextFunction) => {
   //res.cookie('user', '', { httpOnly: true, maxAge: 0 });
   return res.send('');
 };
-const checkTokenUser = catchAsync(async (req, res, next) => {
+const checkTokenUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const usernameFromToken = decodeToken(req, res);
   if (!usernameFromToken) {
     return next(new AppError('Your token does not contain any user', 401));
@@ -63,11 +61,11 @@ const checkTokenUser = catchAsync(async (req, res, next) => {
     return next(new AppError('You are not authorized', 401));
   }
 
-  req.username = usernameFromToken;
+  req.body.username = usernameFromToken;
   next();
 });
 
-const checkTokenStory = catchAsync(async (req, res, next) => {
+const checkTokenStory = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const usernameFromToken = decodeToken(req, res);
   if (!usernameFromToken) {
     return next(new AppError('Your token does not contain any user', 401));
@@ -89,18 +87,18 @@ const checkTokenStory = catchAsync(async (req, res, next) => {
     const storyList = await stories.findAll({
       where: { id: req.params.id },
     });
-    const story = storyList[0];
+    const story: any = storyList[0];
     usernameFromReq = story.username;
   }
   if (usernameFromReq !== usernameFromToken) {
     return next(new AppError('You are not authorized', 401));
   }
 
-  req.username = usernameFromToken;
+  req.body.username = usernameFromToken;
   next();
 });
 
-const validatetUser = catchAsync(async (req, res, next) => {
+const validatetUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const username = req.body.username;
   const password = req.body.password;
   if (!username || !password) {
@@ -111,16 +109,16 @@ const validatetUser = catchAsync(async (req, res, next) => {
     where: { username },
   });
   if (userList.length == 0) return next(new AppError('Authentication failed', 401));
-  const user = userList[0];
+  const user: any = userList[0];
   const isValidPassword = await bcrypt.compare(password, user.password);
   if (!isValidPassword) return next(new AppError('Authentication faileddd', 401));
   const token = generateToken(user.username);
   const messageWithUsername = { message: 'Login Successfull', username: username, token: token };
   //res.cookie('user', token, { httpOnly: true });
-  contentNegotiation.sendResponse(req, res, messageWithUsername, 201);
+  sendResponse(req, res, messageWithUsername, 201);
 });
 
-module.exports = {
+const validation = {
   generateToken,
   checkTokenUser,
   checkTokenStory,
@@ -128,3 +126,4 @@ module.exports = {
   verifyToken,
   logoutUser,
 };
+export default validation;

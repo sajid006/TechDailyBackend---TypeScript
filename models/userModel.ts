@@ -1,11 +1,11 @@
-const sequelize = require('./connection');
-const Sequelize = require('sequelize');
+import * as Sequelize from 'sequelize';
+import sequelize from './connection';
 
 const users = sequelize.define('users', {
   username: {
     type: Sequelize.STRING,
-    unique: { args: true, msg: 'Username must be unique' },
-    primaryKey: { args: true, msg: 'Username must be unique' },
+    unique: true,
+    primaryKey: true,
     validate: {
       is: { args: /^[A-Za-z][A-Za-z0-9_]{4,30}$/, msg: 'Username not acceptable' },
     },
@@ -18,7 +18,7 @@ const users = sequelize.define('users', {
   },
   email: {
     type: Sequelize.STRING,
-    unique: { args: true, msg: 'Email must be unique' },
+    unique: true,
     validate: { isEmail: { msg: 'Invalid email.' } },
   },
   password: {
@@ -26,4 +26,4 @@ const users = sequelize.define('users', {
   },
 });
 
-module.exports = { users };
+export default users;

@@ -1,7 +1,7 @@
-const express = require('express');
-const storyController = require('../controllers/storyController');
-const validation = require('../utils/validation');
-const storyAuthMiddleware = require('../middlewares/storyAuthMiddleware');
+import * as express from 'express';
+import storyController from '../controllers/storyController';
+import storyAuthMiddleware from '../middlewares/storyAuthMiddleware';
+import validation from '../utils/validation';
 
 const router = express.Router();
 
@@ -22,4 +22,4 @@ router
   .delete(storyAuthMiddleware.checkID, validation.checkTokenStory, storyController.deleteStory);
 router.route('/search/:id').get(storyController.getSearchedStories);
 
-module.exports = router;
+export default router;

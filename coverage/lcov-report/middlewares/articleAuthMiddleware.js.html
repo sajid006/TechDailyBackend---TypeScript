@@ -107,7 +107,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const services = require('../services/storyServices');
 const catchAsync = require('../utils/catchAsync');
 &nbsp;
-exports.checkID = catchAsync(async (req, res, next) =&gt; {
+exports.checkID = catchAsync(async (req: Request, res: Response, next: NextFunction) =&gt; {
   const value = req.params.id;
   const noOfStory = await services.validateID(value);
   if (noOfStory &lt; 1) {
@@ -119,7 +119,7 @@ exports.checkID = catchAsync(async (req, res, next) =&gt; {
   next();
 });
 &nbsp;
-exports.checkBody = (req, res, next) =&gt; {
+exports.checkBody = (req: Request, res: Response, next: NextFunction) =&gt; {
   if (!req.body.title || !req.body.description) {
     return res.status(400).json({
       status: 'fail',

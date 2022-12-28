@@ -1,7 +1,6 @@
-const userModel = require('../models/userModel');
-const users = userModel.users;
+import users from '../models/userModel';
 
-exports.validateUser = async (username) => {
+const validateUser = async (username: any) => {
   console.log(username);
   const validUsers = await users.findAll({
     where: {
@@ -13,12 +12,12 @@ exports.validateUser = async (username) => {
   else return 0;
 };
 
-exports.findAllUsers = async () => {
+const findAllUsers = async () => {
   const usersList = await users.findAll();
   return usersList;
 };
 
-exports.findOneUser = async (username) => {
+const findOneUser = async (username: any) => {
   const user = await users.findAll({
     where: {
       username: username,
@@ -28,13 +27,13 @@ exports.findOneUser = async (username) => {
   return user[0];
 };
 
-exports.createUser = async (userData) => {
+const createUser = async (userData: any) => {
   const { username, name, email, password } = userData;
   const newUser = await users.create({ username, name, email, password });
   return newUser;
 };
 
-exports.updateUser = async (username, name, email) => {
+const updateUser = async (username: any, name: any, email: any) => {
   const myUser = await users.update(
     { email, name },
     {
@@ -46,7 +45,7 @@ exports.updateUser = async (username, name, email) => {
   return myUser;
 };
 
-exports.removeUser = async (username) => {
+const removeUser = async (username: any) => {
   const deleted = users.destroy({
     where: {
       username,
@@ -54,3 +53,6 @@ exports.removeUser = async (username) => {
   });
   return deleted;
 };
+
+const userServices = { validateUser, findAllUsers, findOneUser, createUser, updateUser, removeUser };
+export default userServices;

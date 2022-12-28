@@ -1,7 +1,6 @@
-const sequelize = require('./connection');
-const { Deferrable } = require('sequelize');
-const users = require('./userModel').users;
-const Sequelize = require('sequelize');
+import * as Sequelize from 'sequelize';
+import sequelize from './connection';
+import users from './userModel';
 const stories = sequelize.define('stories', {
   id: {
     type: Sequelize.INTEGER,
@@ -14,16 +13,15 @@ const stories = sequelize.define('stories', {
     references: {
       model: users,
       key: 'username',
-      deferrable: Deferrable.INITIALLY_IMMEDIATE,
     },
   },
   title: {
     type: Sequelize.STRING,
-    allowNull: { args: false, msg: 'Title is required.' },
+    allowNull: false,
   },
   description: {
     type: Sequelize.TEXT,
-    allowNull: { args: false, msg: 'Title is required.' },
+    allowNull: false,
   },
   rating: {
     type: Sequelize.INTEGER,
@@ -34,4 +32,4 @@ const stories = sequelize.define('stories', {
   },
 });
 
-module.exports = { stories };
+export default stories;

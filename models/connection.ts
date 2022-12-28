@@ -1,5 +1,6 @@
-const Sequelize = require('sequelize');
+import { Sequelize } from 'sequelize';
 
+/*
 const sequelize = new Sequelize('mysql', 'sajid', '{mypassword}', {
   dialect: 'mssql',
   host: 'techdailybackend.database.windows.net',
@@ -9,12 +10,12 @@ const sequelize = new Sequelize('mysql', 'sajid', '{mypassword}', {
   },
   logging: true,
 });
+*/
 
-/*
 const sequelize = new Sequelize('techdailybackend', 'root', '', {
   dialect: 'mysql',
   host: 'localhost',
-  port: '3306',
+  port: 3306,
 });
-*/
-module.exports = sequelize;
+
+export default sequelize;

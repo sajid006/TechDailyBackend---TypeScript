@@ -331,15 +331,15 @@ const decodeToken = (req, res) =&gt; {
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   return decoded.username;
 };
-const verifyToken = (req, res, next) =&gt; {
+const verifyToken = (req: Request, res: Response, next: NextFunction) =&gt; {
   const username = decodeToken(req, res);
   return res.send(username);
 };
-const logoutUser = (req, res, next) =&gt; {
+const logoutUser = (req: Request, res: Response, next: NextFunction) =&gt; {
   res.cookie('user', '', { httpOnly: true, maxAge: 0 });
   return res.send();
 };
-const checkTokenUser = catchAsync(async (req, res, next) =&gt; {
+const checkTokenUser = catchAsync(async (req: Request, res: Response, next: NextFunction) =&gt; {
   const usernameFromToken = decodeToken(req, res);
   if (!usernameFromToken) {
     return next(new AppError('Your token does not contain any user', 401));
@@ -361,7 +361,7 @@ const checkTokenUser = catchAsync(async (req, res, next) =&gt; {
   next();
 });
 &nbsp;
-const checkTokenStory = catchAsync(async (req, res, next) =&gt; {
+const checkTokenStory = catchAsync(async (req: Request, res: Response, next: NextFunction) =&gt; {
   const usernameFromToken = decodeToken(req, res);
   if (!usernameFromToken) {
     return next(new AppError('Your token does not contain any user', 401));
@@ -393,7 +393,7 @@ const checkTokenStory = catchAsync(async (req, res, next) =&gt; {
   next();
 });
 &nbsp;
-const validatetUser = catchAsync(async (req, res, next) =&gt; {
+const validatetUser = catchAsync(async (req: Request, res: Response, next: NextFunction) =&gt; {
   const username = req.body.username;
   const password = req.body.password;
   if (!username || !password) {

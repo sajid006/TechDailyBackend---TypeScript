@@ -1,8 +1,8 @@
-const sequelize = require('../models/connection');
+import sequelize from '../models/connection';
 
 const db = async () => {
   try {
-    await sequelize.sync({ force: false }).then((result) => {
+    await sequelize.sync({ force: false }).then((result: any) => {
       console.log('Database connected');
     });
   } catch (err) {
@@ -10,4 +10,4 @@ const db = async () => {
     return err;
   }
 };
-module.exports = db;
+export default db;

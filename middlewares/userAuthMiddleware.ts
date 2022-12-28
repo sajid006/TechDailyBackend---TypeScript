@@ -1,9 +1,9 @@
-const services = require('../services/userServices');
-const catchAsync = require('../utils/catchAsync');
-
-exports.checkUsername = catchAsync(async (req, res, next) => {
+import { NextFunction, Request, Response } from 'express';
+import userServices from '../services/userServices';
+import catchAsync from '../utils/catchAsync';
+const checkUsername = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const value = req.params.id;
-  const noOfUser = await services.validateUser(value);
+  const noOfUser = await userServices.validateUser(value);
   if (noOfUser < 1) {
     return res.status(404).json({
       status: 'fail',
@@ -14,7 +14,7 @@ exports.checkUsername = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.checkUpdateBody = (req, res, next) => {
+const checkUpdateBody = (req: Request, res: Response, next: NextFunction) => {
   if (!req.body.email || !req.body.name) {
     return res.status(400).json({
       status: 'fail',
@@ -24,7 +24,7 @@ exports.checkUpdateBody = (req, res, next) => {
   next();
 };
 
-exports.checkPostBody = (req, res, next) => {
+const checkPostBody = (req: Request, res: Response, next: NextFunction) => {
   if (!req.body.username) {
     return res.status(400).json({
       status: 'fail',
@@ -57,3 +57,10 @@ exports.checkPostBody = (req, res, next) => {
   }
   next();
 };
+const userAuthMiddleware = {
+  checkPostBody,
+  checkUpdateBody,
+  checkUsername,
+};
+
+export default userAuthMiddleware;

@@ -3,7 +3,7 @@ const stories = storyModel.stories;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-exports.validateID = async (value) => {
+const validateID = async (value: any) => {
   const validstory = await stories.findAll({
     where: {
       id: value,
@@ -13,12 +13,12 @@ exports.validateID = async (value) => {
   else return 0;
 };
 
-exports.findAllStories = async () => {
+const findAllStories = async () => {
   const storiesList = await stories.findAll();
   return storiesList;
 };
 
-exports.findUserStories = async (id) => {
+const findUserStories = async (id: any) => {
   const storyList = await stories.findAll({
     where: {
       username: id,
@@ -27,7 +27,7 @@ exports.findUserStories = async (id) => {
   return storyList;
 };
 
-exports.findSearchedStories = async (id) => {
+const findSearchedStories = async (id: any) => {
   const storyList = await stories.findAll({
     where: {
       [Op.or]: [
@@ -47,7 +47,7 @@ exports.findSearchedStories = async (id) => {
   return storyList;
 };
 
-exports.findOneStory = async (id) => {
+const findOneStory = async (id: any) => {
   const story = await stories.findAll({
     where: {
       id,
@@ -56,13 +56,16 @@ exports.findOneStory = async (id) => {
   return story[0];
 };
 
-exports.createStory = async (storyData) => {
+const createStory = async (storyData: any) => {
   const { username, title, description, rating } = storyData;
   const newStory = await stories.create({ username, title, description, rating });
   return newStory;
 };
 
-exports.updateStory = async (id, title, description) => {
+const updateStory = async (id: any, title: any, description: any) => {
+  console.log(typeof id);
+  console.log(typeof title);
+  console.log(typeof description);
   const myStory = await stories.update(
     {
       title,
@@ -77,7 +80,7 @@ exports.updateStory = async (id, title, description) => {
   return myStory;
 };
 
-exports.removeStory = async (id) => {
+const removeStory = async (id: any) => {
   const deleted = stories.destroy({
     where: {
       id,
@@ -86,6 +89,17 @@ exports.removeStory = async (id) => {
   return deleted;
 };
 
+const storyServices = {
+  validateID,
+  findAllStories,
+  findUserStories,
+  findSearchedStories,
+  findOneStory,
+  createStory,
+  updateStory,
+  removeStory,
+};
+export default storyServices;
 // $or: [
 //   {
 //     username: {
